@@ -31,14 +31,17 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative pt-20 pb-10 px-6 overflow-hidden section-footer">
-      {/* Top gradient line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
+    <footer className="relative pt-20 pb-10 px-6 overflow-hidden">
+      {/* Top gradient border */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--brand-blue)]/30 to-transparent" />
+
+      {/* Background */}
+      <div className="absolute inset-0 gradient-radial pointer-events-none opacity-50" />
 
       <div className="max-w-7xl mx-auto relative">
         {/* CTA Band */}
-        <div className="rounded-2xl p-10 mb-20 text-center relative overflow-hidden bg-gradient-to-br from-[var(--brand-blue)]/5 to-[var(--brand-red)]/5 border border-[var(--border)]">
-          <h3 className="font-semibold text-3xl md:text-4xl text-[var(--foreground)] mb-4 text-balance">
+        <div className="rounded-2xl p-10 mb-20 text-center relative overflow-hidden bg-gradient-to-br from-[var(--brand-blue)]/10 to-[var(--brand-red)]/5 border border-[var(--brand-blue)]/20">
+          <h3 className="font-semibold text-3xl md:text-4xl text-foreground mb-4 text-balance">
             Ready to Transform Your <span className="text-[var(--brand-blue)]">Enterprise?</span>
           </h3>
           <p className="text-[var(--text-secondary)] mb-8 max-w-xl mx-auto text-lg">
@@ -47,13 +50,13 @@ export default function Footer() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/contact"
-              className="btn-primary px-8 py-3.5 rounded-xl text-sm font-medium"
+              className="px-8 py-3.5 rounded-xl bg-[var(--brand-blue)] text-white font-medium text-sm hover:shadow-[0_0_30px_var(--brand-blue-glow)] transition-all duration-300"
             >
               Get Started Today
             </Link>
             <Link
               href="/services"
-              className="btn-secondary px-8 py-3.5 rounded-xl text-sm font-medium"
+              className="px-8 py-3.5 rounded-xl border border-white/15 text-foreground font-medium text-sm hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)] transition-all duration-300"
             >
               View Services
             </Link>
@@ -72,7 +75,7 @@ export default function Footer() {
                 height={40}
                 className="w-10 h-10 object-contain"
               />
-              <span className="font-semibold text-lg text-[var(--foreground)]">
+              <span className="font-semibold text-lg text-foreground">
                 Conglomerate<span className="text-[var(--brand-blue)]">IT</span>
               </span>
             </Link>
@@ -87,7 +90,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.name}
-                  className="w-9 h-9 rounded-lg border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)] hover:-translate-y-1 transition-all duration-200"
+                  className="w-9 h-9 rounded-lg border border-white/10 flex items-center justify-center text-[var(--text-muted)] hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)] transition-all duration-200"
                 >
                   <span className="text-xs font-bold">{social.icon}</span>
                 </a>
@@ -118,7 +121,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[var(--border)]">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/5">
           <p className="text-xs text-[var(--text-muted)]">
             &copy; {new Date().getFullYear()} ConglomerateIT LLC. All rights reserved.
           </p>

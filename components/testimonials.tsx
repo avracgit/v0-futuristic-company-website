@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { testimonials } from '@/lib/data'
 
 const StarRating = ({ rating }: { rating: number }) => (
@@ -7,7 +8,7 @@ const StarRating = ({ rating }: { rating: number }) => (
     {[...Array(5)].map((_, i) => (
       <svg
         key={i}
-        className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-slate-200'}`}
+        className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-slate-300'}`}
         fill="currentColor"
         viewBox="0 0 20 20"
       >
@@ -17,71 +18,90 @@ const StarRating = ({ rating }: { rating: number }) => (
   </div>
 )
 
-// Double the testimonials for seamless infinite scroll
-const doubledTestimonials = [...testimonials, ...testimonials, ...testimonials, ...testimonials]
-
 export default function Testimonials() {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+  }
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+  }
+
   return (
-    <section className="relative py-24 overflow-hidden section-testimonials">
-      {/* Content */}
-      <div className="py-24 px-6 bg-white">
+    <section className="relative py-24 overflow-hidden">
+      {/* White background section */}
+      <div className="white-section py-24 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-12 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-blue mb-6">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 mb-6">
+              <svg className="w-4 h-4 text-[var(--brand-blue)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
-              <span className="text-xs font-medium">Testimonials</span>
+              <span className="text-xs font-medium text-[var(--brand-blue)]">Testimonials</span>
             </div>
-            <h2 className="font-semibold text-3xl md:text-4xl lg:text-5xl text-[var(--foreground)] text-balance">
+            <h2 className="font-semibold text-3xl md:text-4xl lg:text-5xl text-slate-900 text-balance">
               Here You Can Find Our <span className="text-[var(--brand-blue)]">Reviews</span>
             </h2>
           </div>
 
-          {/* Auto-scrolling Marquee */}
-          <div className="marquee-container py-4">
-            <div className="marquee-track">
-              {doubledTestimonials.map((testimonial, i) => (
-                <div
-                  key={`${testimonial.id}-${i}`}
-                  className="flex-shrink-0 w-[380px] bg-white rounded-2xl border border-[var(--border)] p-6 card-hover"
-                >
-                  {/* Header */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--brand-blue)] to-[var(--brand-red)] flex items-center justify-center text-white font-medium text-sm">
-                      {testimonial.name.charAt(0)}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-[var(--foreground)] text-sm">{testimonial.name}</h4>
-                      <p className="text-xs text-[var(--text-muted)]">{testimonial.role} @ {testimonial.location}</p>
-                    </div>
-                    <StarRating rating={testimonial.rating} />
+          {/* Testimonial Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {testimonials.map((testimonial, i) => (
+              <div
+                key={testimonial.id}
+                className={`bg-white rounded-2xl border border-slate-200 p-6 transition-all duration-300 ${
+                  i === currentIndex ? 'ring-2 ring-[var(--brand-blue)] shadow-lg' : 'hover:shadow-md'
+                }`}
+              >
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-medium text-sm">
+                    {testimonial.name.charAt(0)}
                   </div>
-
-                  {/* Content */}
-                  <h5 className="font-semibold text-[var(--foreground)] mb-2">{testimonial.title}</h5>
-                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4 line-clamp-3">
-                    {testimonial.content}
-                  </p>
-
-                  {/* Company */}
-                  <div className="pt-4 border-t border-[var(--border)]">
-                    <span className="text-sm font-medium text-[var(--brand-blue)]">{testimonial.company}</span>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-slate-900 text-sm">{testimonial.name}</h4>
+                    <p className="text-xs text-slate-500">{testimonial.role} @ {testimonial.location}</p>
                   </div>
+                  <StarRating rating={testimonial.rating} />
                 </div>
-              ))}
-            </div>
+
+                {/* Content */}
+                <h5 className="font-semibold text-slate-900 mb-2">{testimonial.title}</h5>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                  {testimonial.content}
+                </p>
+
+                {/* Company */}
+                <div className="pt-4 border-t border-slate-100">
+                  <span className="text-sm font-medium text-slate-700">{testimonial.company}</span>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Trust indicators */}
-          <div className="mt-12 text-center">
-            <p className="text-sm text-[var(--text-muted)] mb-4">Trusted by leading enterprises worldwide</p>
-            <div className="flex flex-wrap items-center justify-center gap-8 opacity-40">
-              {['Fortune 500', 'Tech Giants', 'Healthcare Leaders', 'Financial Services'].map((label) => (
-                <span key={label} className="text-sm font-medium text-[var(--text-secondary)]">{label}</span>
-              ))}
-            </div>
+          {/* Navigation */}
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={prevSlide}
+              className="w-10 h-10 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-colors"
+              aria-label="Previous testimonial"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={nextSlide}
+              className="w-10 h-10 rounded-lg bg-slate-900 flex items-center justify-center text-white hover:bg-slate-800 transition-colors"
+              aria-label="Next testimonial"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
