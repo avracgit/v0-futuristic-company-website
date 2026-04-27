@@ -1,119 +1,130 @@
-import Link from 'next/link'
+'use client'
 
 const pillars = [
   {
     title: 'Vision-Driven',
     description: 'Every vertical is guided by a long-term strategic vision to lead, not just compete.',
-    color: 'red' as const,
+    color: '#00d4ff',
   },
   {
     title: 'Results-First',
     description: 'Our track record across industries speaks louder than any promise.',
-    color: 'blue' as const,
+    color: '#7c3aed',
   },
   {
     title: 'Innovation Always',
     description: 'We continuously invest in R&D to stay ahead of every industry curve.',
-    color: 'red' as const,
+    color: '#00d4ff',
   },
   {
     title: 'People-Centric',
     description: 'Great companies are built by great people. We prioritize talent at every level.',
-    color: 'blue' as const,
+    color: '#7c3aed',
   },
 ]
 
 export default function About() {
   return (
-    <section id="about" className="relative py-28 border-b border-white/[0.05]">
-      {/* Diagonal stripe accent — top right */}
+    <section id="about" className="relative py-28 px-6 overflow-hidden">
+      {/* Background */}
       <div
-        className="absolute top-0 right-0 w-72 h-72 pointer-events-none opacity-40 stripe-accent"
+        className="absolute inset-0 pointer-events-none grid-bg opacity-50"
         aria-hidden="true"
-        style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 0)' }}
+      />
+      <div
+        className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full pointer-events-none blur-3xl opacity-5"
+        style={{ background: 'var(--neon-cyan)' }}
+        aria-hidden="true"
       />
 
-      <div className="section-container">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          {/* Left */}
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Left: Text content */}
           <div>
-            <p className="section-label">Who We Are</p>
-            <h2 className="font-sans font-bold text-4xl md:text-5xl text-balance text-[var(--foreground)] leading-tight mb-6">
-              A Conglomerate Built<br />
-              for the{' '}
-              <span className="text-[var(--brand-red)]">Digital Age</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(0,212,255,0.3)] bg-[rgba(0,212,255,0.05)] mb-6">
+              <span className="w-2 h-2 rounded-full bg-[var(--neon-cyan)] pulse-glow" />
+              <span className="font-mono text-xs text-[var(--neon-cyan)] tracking-widest uppercase">
+                Who We Are
+              </span>
+            </div>
+            <h2 className="font-sans font-bold text-4xl md:text-5xl text-balance text-foreground mb-6 leading-tight">
+              A Conglomerate Built for the{' '}
+              <span className="text-[var(--neon-cyan)]">Digital Age</span>
             </h2>
-            <p className="text-[var(--text-muted)] text-base leading-relaxed mb-4">
+            <p className="text-[#a0a8c0] text-lg leading-relaxed mb-5">
               ConglomerateIT is more than a company — it&apos;s a family of high-performing enterprises,
               each a leader in its domain. Founded on the principle that diversification drives
-              resilience, we have built a portfolio that spans Technology, Consulting, Real Estate,
-              Finance, Education, and Staffing.
+              resilience, we have built a portfolio that spans technology, consulting, real estate,
+              finance, education, and staffing.
             </p>
-            <p className="text-[var(--text-muted)] text-base leading-relaxed mb-8">
+            <p className="text-[#a0a8c0] text-lg leading-relaxed mb-8">
               What unites every vertical under the ConglomerateIT banner is an unwavering commitment
-              to excellence, a culture of innovation, and a relentless focus on delivering real value
+              to excellence, a culture of innovation, and a relentless focus on delivering value
               to clients, partners, and communities.
             </p>
 
-            <div className="flex gap-4 flex-wrap">
-              <Link href="/about" className="btn-primary text-sm">
-                Our Full Story
-                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                </svg>
-              </Link>
-              <Link href="/verticals" className="btn-outline text-sm">
-                View Verticals
-              </Link>
-            </div>
+            {/* CTA */}
+            <button className="px-8 py-3.5 rounded-xl border border-[rgba(0,212,255,0.3)] text-[var(--neon-cyan)] font-semibold text-sm tracking-wide hover:bg-[var(--neon-cyan)] hover:text-black transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,212,255,0.4)]">
+              Read Full Story
+            </button>
           </div>
 
-          {/* Right: Pillars */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {pillars.map((p) => (
-              <div key={p.title} className="brand-card rounded-lg p-6">
+          {/* Right: Pillars grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {pillars.map((p, i) => (
+              <div
+                key={i}
+                className="glow-card rounded-2xl p-6 group"
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
                 <div
-                  className="w-8 h-1 rounded-full mb-4"
-                  aria-hidden="true"
-                  style={{ background: p.color === 'red' ? 'var(--brand-red)' : 'var(--brand-blue)' }}
-                />
-                <h3 className="font-sans font-semibold text-sm text-[var(--foreground)] mb-2">
+                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+                  style={{
+                    background: `${p.color}12`,
+                    border: `1px solid ${p.color}25`,
+                  }}
+                >
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ background: p.color, boxShadow: `0 0 8px ${p.color}` }}
+                  />
+                </div>
+                <h3
+                  className="font-sans font-semibold text-base mb-2"
+                  style={{ color: p.color }}
+                >
                   {p.title}
                 </h3>
-                <p className="text-[var(--text-subtle)] text-sm leading-relaxed">{p.description}</p>
+                <p className="text-[#6b7494] text-sm leading-relaxed">{p.description}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Marquee strip */}
-        <div className="mt-20 overflow-hidden">
-          <p className="text-center font-mono text-[10px] text-[var(--text-subtle)] tracking-widest uppercase mb-6">
+        {/* Marquee / partner strip */}
+        <div className="mt-24 overflow-hidden">
+          <p className="text-center font-mono text-xs text-[#6b7494] tracking-widest uppercase mb-8">
             Trusted Across Industries
           </p>
           <div className="relative">
-            <div
-              className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
+            <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
               style={{ background: 'linear-gradient(90deg, var(--background), transparent)' }}
-              aria-hidden="true"
             />
-            <div
-              className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
+            <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
               style={{ background: 'linear-gradient(270deg, var(--background), transparent)' }}
-              aria-hidden="true"
             />
-            <div className="marquee-inner" aria-hidden="true">
+            <div className="marquee-inner">
               {[
                 'Enterprise Technology', 'Strategic Consulting', 'HR & Staffing',
-                'Real Estate Development', 'Education & Training', 'Finance & Fintech',
-                'Cloud Solutions', 'Digital Transformation', 'Workforce Management',
+                'Real Estate', 'Education', 'Finance & Fintech',
+                'Cloud Solutions', 'AI & Machine Learning', 'Digital Transformation',
                 'Enterprise Technology', 'Strategic Consulting', 'HR & Staffing',
-                'Real Estate Development', 'Education & Training', 'Finance & Fintech',
-                'Cloud Solutions', 'Digital Transformation', 'Workforce Management',
+                'Real Estate', 'Education', 'Finance & Fintech',
+                'Cloud Solutions', 'AI & Machine Learning', 'Digital Transformation',
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="flex-shrink-0 px-6 py-2 mx-2 rounded-full text-xs text-[var(--text-subtle)] font-medium whitespace-nowrap border border-white/[0.06]"
+                  className="flex-shrink-0 px-8 py-3 mx-2 rounded-full border border-[rgba(0,212,255,0.15)] text-[#6b7494] text-sm font-medium whitespace-nowrap"
                 >
                   {item}
                 </div>

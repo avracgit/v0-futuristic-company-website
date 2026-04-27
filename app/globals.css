@@ -4,35 +4,35 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #08090f;
-  --foreground: #f0f0f5;
-  --card: #0f1018;
-  --card-foreground: #f0f0f5;
-  --popover: #0f1018;
-  --popover-foreground: #f0f0f5;
-  --primary: #e02020;
-  --primary-foreground: #ffffff;
-  --secondary: #0a3fa8;
-  --secondary-foreground: #ffffff;
-  --muted: #13141f;
-  --muted-foreground: #7a7a90;
-  --accent: #e02020;
+  /* Futuristic dark theme as default */
+  --background: #03040a;
+  --foreground: #e8eaf6;
+  --card: #0a0d1a;
+  --card-foreground: #e8eaf6;
+  --popover: #0a0d1a;
+  --popover-foreground: #e8eaf6;
+  --primary: #00d4ff;
+  --primary-foreground: #03040a;
+  --secondary: #0d1224;
+  --secondary-foreground: #a0a8c0;
+  --muted: #111527;
+  --muted-foreground: #6b7494;
+  --accent: #7c3aed;
   --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: rgba(255, 255, 255, 0.08);
-  --input: #13141f;
-  --ring: #e02020;
-  --radius: 0.5rem;
+  --border: rgba(0, 212, 255, 0.12);
+  --input: #0d1224;
+  --ring: #00d4ff;
+  --radius: 0.75rem;
 
-  /* Brand tokens */
-  --brand-red: #e02020;
-  --brand-red-dark: #b81a1a;
-  --brand-blue: #1a4fcc;
-  --brand-blue-light: #2563eb;
-  --brand-blue-dark: #0a3fa8;
-  --text-muted: #7a7a90;
-  --text-subtle: #4a4a60;
+  /* Custom brand tokens */
+  --neon-cyan: #00d4ff;
+  --neon-blue: #0066ff;
+  --neon-violet: #7c3aed;
+  --grid-line: rgba(0, 212, 255, 0.05);
+  --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.4), 0 0 60px rgba(0, 212, 255, 0.1);
+  --glow-violet: 0 0 20px rgba(124, 58, 237, 0.4), 0 0 60px rgba(124, 58, 237, 0.1);
 }
 
 @theme inline {
@@ -57,10 +57,10 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 2px);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 4px);
-  --radius-xl: calc(var(--radius) + 8px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 @layer base {
@@ -72,182 +72,112 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    background-color: var(--background);
   }
 }
 
-/* ────────────────────────────────
-   Layout helpers
-──────────────────────────────── */
-.section-container {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-/* ────────────────────────────────
-   Subtle grid pattern
-──────────────────────────────── */
+/* Grid background pattern */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-  background-size: 72px 72px;
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
 
-/* ────────────────────────────────
-   Cards
-──────────────────────────────── */
-.brand-card {
-  background: var(--card);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-}
-.brand-card:hover {
-  border-color: rgba(224, 32, 32, 0.35);
-  box-shadow: 0 8px 32px rgba(224, 32, 32, 0.08);
-  transform: translateY(-2px);
-}
-.brand-card-blue:hover {
-  border-color: rgba(26, 79, 204, 0.4);
-  box-shadow: 0 8px 32px rgba(26, 79, 204, 0.1);
+/* Neon text glow */
+.neon-text {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 30px rgba(0, 212, 255, 0.4);
 }
 
-/* ────────────────────────────────
-   Buttons
-──────────────────────────────── */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
-  background: var(--brand-red);
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: var(--radius);
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+/* Glowing border card */
+.glow-card {
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  background: linear-gradient(135deg, rgba(10, 13, 26, 0.8) 0%, rgba(13, 18, 36, 0.6) 100%);
+  backdrop-filter: blur(12px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.btn-primary:hover {
-  background: var(--brand-red-dark);
-  box-shadow: 0 4px 20px rgba(224, 32, 32, 0.35);
-  transform: translateY(-1px);
-}
-.btn-outline {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
-  background: transparent;
-  color: var(--foreground);
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-}
-.btn-outline:hover {
-  border-color: var(--brand-blue-light);
-  color: var(--brand-blue-light);
-  background: rgba(26, 79, 204, 0.06);
-}
-.btn-blue {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
-  background: var(--brand-blue);
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: var(--radius);
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-}
-.btn-blue:hover {
-  background: var(--brand-blue-dark);
-  box-shadow: 0 4px 20px rgba(26, 79, 204, 0.35);
-  transform: translateY(-1px);
+.glow-card:hover {
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: var(--glow-cyan);
 }
 
-/* ────────────────────────────────
-   Section labels
-──────────────────────────────── */
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--brand-red);
-  margin-bottom: 1rem;
+/* Shimmer animation */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
-.section-label::before {
-  content: '';
-  display: block;
-  width: 20px;
-  height: 2px;
-  background: var(--brand-red);
-  flex-shrink: 0;
+.shimmer-text {
+  background: linear-gradient(90deg, #00d4ff 0%, #ffffff 30%, #7c3aed 60%, #00d4ff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
 }
 
-/* ────────────────────────────────
-   Dividers
-──────────────────────────────── */
-.hr-brand {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(224,32,32,0.3), rgba(26,79,204,0.3), transparent);
-  border: none;
+/* Scan line animation */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
 }
 
-/* ────────────────────────────────
-   Animations
-──────────────────────────────── */
+/* Pulse glow */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.float-anim {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Counter animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade in up */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .fade-in-up {
-  animation: fadeInUp 0.6s ease-out both;
+  animation: fadeInUp 0.7s ease-out forwards;
 }
 
+/* Typewriter cursor */
 @keyframes blink {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+  50% { opacity: 0; }
 }
 .cursor-blink {
   animation: blink 1s step-end infinite;
 }
 
+/* Horizontal marquee */
 @keyframes marquee {
-  0%   { transform: translateX(0); }
+  0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 .marquee-inner {
-  animation: marquee 28s linear infinite;
+  animation: marquee 30s linear infinite;
   display: flex;
   width: max-content;
 }
 
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Diagonal stripe accent */
-.stripe-accent {
-  background-image: repeating-linear-gradient(
-    -55deg,
-    transparent,
-    transparent 4px,
-    rgba(224, 32, 32, 0.06) 4px,
-    rgba(224, 32, 32, 0.06) 5px
-  );
+/* Rotating border */
+@keyframes rotateBorder {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

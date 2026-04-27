@@ -1,121 +1,222 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { verticals } from '@/lib/verticals-data'
+
+const WORDS = ['Innovation', 'Technology', 'Excellence', 'Disruption', 'Growth']
 
 export default function Hero() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [wordIndex, setWordIndex] = useState(0)
+  const [displayed, setDisplayed] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const animFrameRef = useRef<number>(0)
+  const mouseRef = useRef({ x: 0, y: 0 })
+
+  // Typewriter effect
+  useEffect(() => {
+    const target = WORDS[wordIndex]
+    let timeout: ReturnType<typeof setTimeout>
+
+    if (!deleting && displayed.length < target.length) {
+      timeout = setTimeout(() => setDisplayed(target.slice(0, displayed.length + 1)), 90)
+    } else if (!deleting && displayed.length === target.length) {
+      timeout = setTimeout(() => setDeleting(true), 1800)
+    } else if (deleting && displayed.length > 0) {
+      timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 50)
+    } else if (deleting && displayed.length === 0) {
+      setDeleting(false)
+      setWordIndex((i) => (i + 1) % WORDS.length)
+    }
+
+    return () => clearTimeout(timeout)
+  }, [displayed, deleting, wordIndex])
+
+  // Interactive particle canvas
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const resize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY }
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+
+    // Particles
+    const count = window.innerWidth < 768 ? 60 : 140
+    const particles: {
+      x: number; y: number; vx: number; vy: number
+      size: number; color: string; opacity: number
+    }[] = []
+    const colors = ['#00d4ff', '#0066ff', '#7c3aed', '#00d4ff', '#ffffff']
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: Math.random() * 1.5 + 0.5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        opacity: Math.random() * 0.6 + 0.2,
+      })
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      const mx = mouseRef.current.x
+      const my = mouseRef.current.y
+      const mouseRadius = 120
+
+      // Update & draw particles
+      for (const p of particles) {
+        p.x += p.vx
+        p.y += p.vy
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1
+
+        const dx = mx - p.x
+        const dy = my - p.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < mouseRadius) {
+          const force = (mouseRadius - dist) / mouseRadius * 0.015
+          p.vx -= (dx / dist) * force
+          p.vy -= (dy / dist) * force
+        }
+
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+        ctx.fillStyle = p.color
+        ctx.globalAlpha = p.opacity
+        ctx.fill()
+        ctx.globalAlpha = 1
+      }
+
+      // Draw connections
+      const connectionDist = 130
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const pa = particles[i]
+          const pb = particles[j]
+          const dx = pa.x - pb.x
+          const dy = pa.y - pb.y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          if (dist < connectionDist) {
+            const opacity = (1 - dist / connectionDist) * 0.25
+            ctx.beginPath()
+            ctx.moveTo(pa.x, pa.y)
+            ctx.lineTo(pb.x, pb.y)
+            ctx.strokeStyle = `rgba(0, 212, 255, ${opacity})`
+            ctx.lineWidth = 0.5
+            ctx.stroke()
+          }
+        }
+      }
+
+      animFrameRef.current = requestAnimationFrame(animate)
+    }
+
+    animate()
+
+    return () => {
+      window.removeEventListener('resize', resize)
+      window.removeEventListener('mousemove', handleMouseMove)
+      cancelAnimationFrame(animFrameRef.current)
+    }
+  }, [])
+
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center pt-16 overflow-hidden grid-bg"
-      aria-label="Hero"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg"
     >
-      {/* Background gradient — kept very subtle */}
+      {/* Canvas background */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        aria-hidden="true"
+      />
+
+      {/* Radial glow */}
       <div
         className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 60% 40%, rgba(26,79,204,0.07) 0%, transparent 55%)',
+            'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,102,255,0.08) 0%, rgba(0,212,255,0.04) 40%, transparent 70%)',
         }}
-      />
-
-      {/* Red left edge accent */}
-      <div
-        className="absolute top-0 left-0 w-1 h-full"
         aria-hidden="true"
-        style={{ background: 'linear-gradient(180deg, transparent 0%, var(--brand-red) 30%, var(--brand-blue) 70%, transparent 100%)' }}
       />
 
-      <div className="section-container w-full py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Main content */}
-          <div>
-            <p className="section-label mb-6">Multi-Domain Enterprise</p>
+      {/* Side accent glows */}
+      <div
+        className="absolute top-1/3 -left-32 w-96 h-96 rounded-full pointer-events-none blur-3xl opacity-20"
+        style={{ background: 'var(--neon-violet)' }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-1/4 -right-32 w-80 h-80 rounded-full pointer-events-none blur-3xl opacity-15"
+        style={{ background: 'var(--neon-cyan)' }}
+        aria-hidden="true"
+      />
 
-            <h1 className="font-sans font-bold text-5xl md:text-6xl xl:text-7xl leading-[1.05] tracking-tight text-balance text-[var(--foreground)] mb-6">
-              One Company.
-              <br />
-              <span className="text-[var(--brand-red)]">Six</span>{' '}
-              <span
-                className="relative"
-                style={{
-                  background: 'linear-gradient(135deg, #1a4fcc 0%, #e02020 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                Industries.
-              </span>
-              <br />
-              Exceptional Results.
-            </h1>
+      {/* Content */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(0,212,255,0.3)] bg-[rgba(0,212,255,0.05)] mb-8 fade-in-up">
+          <span className="w-2 h-2 rounded-full bg-[var(--neon-cyan)] pulse-glow" />
+          <span className="font-mono text-xs text-[var(--neon-cyan)] tracking-widest uppercase">
+            Multi-Domain Powerhouse
+          </span>
+        </div>
 
-            <p className="text-[var(--text-muted)] text-lg leading-relaxed max-w-lg mb-10">
-              ConglomerateIT is a diversified enterprise operating across Technology, Consulting,
-              Staffing, Real Estate, Education, and Finance — each vertical a leader in its field.
-            </p>
+        {/* Headline */}
+        <h1 className="font-sans font-bold text-5xl md:text-7xl lg:text-8xl leading-none tracking-tight text-balance mb-6 fade-in-up">
+          <span className="text-foreground">Driving</span>{' '}
+          <span className="shimmer-text">{displayed}</span>
+          <span className="text-[var(--neon-cyan)] cursor-blink">|</span>
+          <br />
+          <span className="text-foreground">Across Every</span>{' '}
+          <span className="text-[var(--neon-cyan)]">Domain</span>
+        </h1>
 
-            <div className="flex flex-wrap gap-4">
-              <Link href="/verticals" className="btn-primary">
-                Explore Our Verticals
-                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                </svg>
-              </Link>
-              <Link href="/about" className="btn-outline">
-                About Us
-              </Link>
-            </div>
+        {/* Subheadline */}
+        <p className="text-[#a0a8c0] text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10 fade-in-up">
+          ConglomerateIT is a multi-vertical enterprise that has consistently delivered exceptional
+          results across technology, business, and industry — redefining what&apos;s possible.
+        </p>
 
-            {/* Trust bar */}
-            <div className="flex items-center gap-6 mt-12 pt-12 border-t border-white/[0.06]">
-              {[
-                { value: '500+', label: 'Clients' },
-                { value: '15+', label: 'Years' },
-                { value: '6', label: 'Verticals' },
-                { value: '98%', label: 'Satisfaction' },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div className="font-sans font-bold text-xl text-[var(--foreground)]">{stat.value}</div>
-                  <div className="text-xs text-[var(--text-subtle)] mt-0.5">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* CTA buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-4 fade-in-up">
+          <Link
+            href="#verticals"
+            className="px-8 py-3.5 rounded-xl bg-[var(--neon-cyan)] text-black font-semibold text-sm tracking-wide hover:shadow-[0_0_30px_rgba(0,212,255,0.5)] hover:scale-105 transition-all duration-300"
+          >
+            Explore Verticals
+          </Link>
+          <Link
+            href="#about"
+            className="px-8 py-3.5 rounded-xl border border-[rgba(255,255,255,0.15)] text-foreground font-semibold text-sm tracking-wide hover:border-[var(--neon-cyan)] hover:text-[var(--neon-cyan)] transition-all duration-300"
+          >
+            About Us
+          </Link>
+        </div>
 
-          {/* Right: Verticals grid */}
-          <div className="hidden lg:grid grid-cols-2 gap-3">
-            {verticals.map((v) => (
-              <Link
-                key={v.id}
-                href={`/verticals/${v.id}`}
-                className="brand-card rounded-lg p-5 group"
-              >
-                <div
-                  className="w-2 h-2 rounded-full mb-3"
-                  style={{ background: v.color === 'red' ? 'var(--brand-red)' : 'var(--brand-blue)' }}
-                  aria-hidden="true"
-                />
-                <h3 className="font-sans font-semibold text-sm text-[var(--foreground)] mb-1 group-hover:text-[var(--brand-red)] transition-colors">
-                  {v.title}
-                </h3>
-                <p className="text-xs text-[var(--text-subtle)] leading-relaxed line-clamp-2">{v.shortDesc}</p>
-                <div className="mt-3 flex items-center gap-1 text-[10px] font-medium text-[var(--text-subtle)] group-hover:text-[var(--brand-red)] transition-colors">
-                  Learn more
-                  <svg className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              </Link>
-            ))}
-          </div>
+        {/* Scroll indicator */}
+        <div className="mt-20 flex flex-col items-center gap-2 opacity-50">
+          <span className="font-mono text-xs text-[#6b7494] tracking-widest uppercase">Scroll</span>
+          <div className="w-px h-12 bg-gradient-to-b from-[var(--neon-cyan)] to-transparent" />
         </div>
       </div>
-
-      {/* Bottom border */}
-      <div className="absolute bottom-0 left-0 right-0 hr-brand" aria-hidden="true" />
     </section>
   )
 }

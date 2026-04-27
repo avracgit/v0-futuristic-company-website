@@ -15,13 +15,13 @@ const spaceMono = Space_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'ConglomerateIT — Multi-Domain Enterprise',
+  title: 'ConglomerateIT — Redefining Industries',
   description:
-    'ConglomerateIT is a diversified enterprise operating across Technology, Consulting, Staffing, Real Estate, Education, and Finance — each vertical a leader in its field.',
-  keywords: ['ConglomerateIT', 'technology', 'consulting', 'staffing', 'real estate', 'education', 'finance', 'enterprise', 'multi-domain'],
+    'ConglomerateIT is a multi-domain powerhouse driving innovation across technology, business, and beyond. Discover our verticals and join the future.',
+  keywords: ['ConglomerateIT', 'technology', 'innovation', 'multi-domain', 'enterprise', 'IT solutions'],
   openGraph: {
-    title: 'ConglomerateIT — Multi-Domain Enterprise',
-    description: 'A diversified enterprise operating across six industry verticals with exceptional results.',
+    title: 'ConglomerateIT — Redefining Industries',
+    description: 'A multi-domain powerhouse driving innovation across technology, business, and beyond.',
     type: 'website',
   },
 }
