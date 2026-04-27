@@ -5,11 +5,10 @@ import About from '@/components/about'
 import Verticals from '@/components/verticals'
 import Blog from '@/components/blog'
 import Footer from '@/components/footer'
-import Chatbot from '@/components/chatbot'
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <main className="min-h-screen bg-background text-foreground">
       <Navbar />
       <Hero />
       <Stats />
@@ -17,7 +16,6 @@ export default function Home() {
       <Verticals />
       <Blog />
       <Footer />
-      <Chatbot />
     </main>
   )
 }

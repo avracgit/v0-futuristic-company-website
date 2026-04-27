@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from 'react'
 
 const stats = [
-  { value: 500, suffix: '+', label: 'Enterprise Clients', color: '#00d4ff' },
-  { value: 6, suffix: '', label: 'Industry Verticals', color: '#7c3aed' },
-  { value: 15, suffix: '+', label: 'Years of Excellence', color: '#00d4ff' },
-  { value: 98, suffix: '%', label: 'Client Satisfaction', color: '#7c3aed' },
+  { value: 500, suffix: '+', label: 'Enterprise Clients', desc: 'Across every vertical we serve' },
+  { value: 6, suffix: '', label: 'Industry Verticals', desc: 'From tech to real estate' },
+  { value: 15, suffix: '+', label: 'Years of Excellence', desc: 'Proven track record since founding' },
+  { value: 98, suffix: '%', label: 'Client Satisfaction', desc: 'Measured annually across all engagements' },
 ]
 
 function CountUp({ target, suffix }: { target: number; suffix: string }) {
@@ -17,13 +17,12 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !observed.current) {
           observed.current = true
           let start = 0
-          const duration = 1800
+          const duration = 1600
           const step = (timestamp: number) => {
             if (!start) start = timestamp
             const progress = Math.min((timestamp - start) / duration, 1)
@@ -35,52 +34,30 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
           requestAnimationFrame(step)
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.4 }
     )
-
     observer.observe(el)
     return () => observer.disconnect()
   }, [target])
 
-  return (
-    <span ref={ref}>
-      {count}
-      {suffix}
-    </span>
-  )
+  return <span ref={ref}>{count}{suffix}</span>
 }
 
 export default function Stats() {
   return (
-    <section id="stats" className="relative py-24 px-6 overflow-hidden">
-      {/* Background accent */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          background:
-            'radial-gradient(ellipse 100% 60% at 50% 50%, rgba(0,212,255,0.04) 0%, transparent 70%)',
-        }}
-      />
-      {/* Top/bottom border lines */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(0,212,255,0.3)] to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(0,212,255,0.3)] to-transparent" />
-
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+    <section id="stats" className="relative py-20 px-6 border-b border-white/[0.05]">
+      <div className="section-container">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0 lg:divide-x lg:divide-white/[0.06]">
           {stats.map((stat, i) => (
-            <div key={i} className="text-center group">
+            <div key={i} className="lg:px-10 text-center lg:text-left first:lg:pl-0 last:lg:pr-0">
               <div
-                className="font-sans font-bold text-5xl md:text-6xl mb-2 transition-all duration-300"
-                style={{ color: stat.color, textShadow: `0 0 20px ${stat.color}60` }}
+                className="font-sans font-bold text-4xl md:text-5xl mb-1"
+                style={{ color: i % 2 === 0 ? 'var(--brand-red)' : 'var(--brand-blue-light)' }}
               >
                 <CountUp target={stat.value} suffix={stat.suffix} />
               </div>
-              <p className="font-mono text-xs text-[#6b7494] tracking-widest uppercase">{stat.label}</p>
-              <div
-                className="mt-4 h-px w-0 group-hover:w-full mx-auto transition-all duration-500"
-                style={{ background: `linear-gradient(90deg, transparent, ${stat.color}, transparent)` }}
-              />
+              <div className="font-medium text-sm text-[var(--foreground)] mb-1">{stat.label}</div>
+              <div className="text-xs text-[var(--text-subtle)] leading-relaxed hidden sm:block">{stat.desc}</div>
             </div>
           ))}
         </div>
