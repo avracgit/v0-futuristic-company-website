@@ -1,11 +1,11 @@
 import Navbar from '@/components/navbar'
 import Hero from '@/components/hero'
 import Stats from '@/components/stats'
-import About from '@/components/about'
-import Verticals from '@/components/verticals'
-import Blog from '@/components/blog'
+import Results from '@/components/results'
+import Features from '@/components/features'
+import Integrations from '@/components/integrations'
+import Testimonials from '@/components/testimonials'
 import Footer from '@/components/footer'
-import Chatbot from '@/components/chatbot'
 
 export default function Home() {
   return (
@@ -13,11 +13,11 @@ export default function Home() {
       <Navbar />
       <Hero />
       <Stats />
-      <About />
-      <Verticals />
-      <Blog />
+      <Results />
+      <Features />
+      <Integrations />
+      <Testimonials />
       <Footer />
-      <Chatbot />
     </main>
   )
 }

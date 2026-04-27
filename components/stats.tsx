@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from 'react'
 
 const stats = [
-  { value: 500, suffix: '+', label: 'Enterprise Clients', color: '#00d4ff' },
-  { value: 6, suffix: '', label: 'Industry Verticals', color: '#7c3aed' },
-  { value: 15, suffix: '+', label: 'Years of Excellence', color: '#00d4ff' },
-  { value: 98, suffix: '%', label: 'Client Satisfaction', color: '#7c3aed' },
+  { value: 500, suffix: '+', label: 'Enterprise Clients', color: 'var(--brand-blue)' },
+  { value: 6, suffix: '', label: 'Industry Verticals', color: 'var(--brand-red)' },
+  { value: 15, suffix: '+', label: 'Years of Excellence', color: 'var(--brand-blue)' },
+  { value: 98, suffix: '%', label: 'Client Satisfaction', color: 'var(--brand-red)' },
 ]
 
 function CountUp({ target, suffix }: { target: number; suffix: string }) {
@@ -57,14 +57,14 @@ export default function Stats() {
       <div
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
-        style={{
+          style={{
           background:
-            'radial-gradient(ellipse 100% 60% at 50% 50%, rgba(0,212,255,0.04) 0%, transparent 70%)',
+            'radial-gradient(ellipse 100% 60% at 50% 50%, rgba(26,79,204,0.05) 0%, transparent 70%)',
         }}
       />
       {/* Top/bottom border lines */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(0,212,255,0.3)] to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(0,212,255,0.3)] to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(26,79,204,0.25)] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(26,79,204,0.25)] to-transparent" />
 
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -72,7 +72,7 @@ export default function Stats() {
             <div key={i} className="text-center group">
               <div
                 className="font-sans font-bold text-5xl md:text-6xl mb-2 transition-all duration-300"
-                style={{ color: stat.color, textShadow: `0 0 20px ${stat.color}60` }}
+                style={{ color: stat.color }}
               >
                 <CountUp target={stat.value} suffix={stat.suffix} />
               </div>
