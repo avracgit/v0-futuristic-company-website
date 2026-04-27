@@ -2,20 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-
-const navLinks = [
-  { label: 'Home', href: '#home' },
-  { label: 'About', href: '#about' },
-  { label: 'Verticals', href: '#verticals' },
-  { label: 'Stats', href: '#stats' },
-  { label: 'Blog', href: '#blog' },
-  { label: 'Contact', href: '#contact' },
-]
+import Image from 'next/image'
+import { navLinks } from '@/lib/data'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,36 +19,36 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#03040a]/90 backdrop-blur-xl border-b border-[rgba(0,212,255,0.12)] shadow-[0_4px_30px_rgba(0,212,255,0.05)]'
+          ? 'bg-[#0a0f1c]/95 backdrop-blur-xl border-b border-[rgba(59,130,246,0.1)]'
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="#home" className="flex items-center gap-3 group">
-          <div className="relative w-9 h-9">
-            <div className="absolute inset-0 rounded-lg bg-[var(--neon-cyan)] opacity-20 group-hover:opacity-40 transition-opacity blur-sm" />
-            <div className="relative w-9 h-9 rounded-lg border border-[var(--neon-cyan)] flex items-center justify-center">
-              <span className="font-mono text-xs font-bold text-[var(--neon-cyan)]">CG</span>
-            </div>
-          </div>
-          <span className="font-sans font-700 text-lg tracking-tight text-foreground">
-            Conglomerate<span className="text-[var(--neon-cyan)]">IT</span>
+        <Link href="/" className="flex items-center gap-3 group">
+          <Image
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/banner%20logo%20latest-Wy6FwAgjDavAiB9pvHR7pRWJVuZx3Z.png"
+            alt="ConglomerateIT"
+            width={40}
+            height={40}
+            className="w-10 h-10 object-contain"
+          />
+          <span className="font-semibold text-lg text-foreground hidden sm:block">
+            Conglomerate<span className="text-[var(--brand-blue)]">IT</span>
           </span>
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="font-sans text-sm text-[#a0a8c0] hover:text-[var(--neon-cyan)] transition-colors duration-200 relative group"
+              className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-foreground transition-colors rounded-lg hover:bg-white/5"
             >
               {link.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[var(--neon-cyan)] group-hover:w-full transition-all duration-300" />
             </Link>
           ))}
         </div>
@@ -64,10 +56,13 @@ export default function Navbar() {
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
           <Link
-            href="#contact"
-            className="px-5 py-2 rounded-lg border border-[var(--neon-cyan)] text-[var(--neon-cyan)] text-sm font-medium hover:bg-[var(--neon-cyan)] hover:text-black transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,212,255,0.4)]"
+            href="/contact"
+            className="px-5 py-2.5 rounded-lg bg-[var(--brand-blue)] text-white text-sm font-medium hover:shadow-[0_0_20px_var(--brand-blue-glow)] transition-all duration-300 flex items-center gap-2"
           >
-            Get in Touch
+            Request Access
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </Link>
         </div>
 
@@ -78,13 +73,13 @@ export default function Navbar() {
           aria-label="Toggle menu"
         >
           <span
-            className={`block w-6 h-0.5 bg-[var(--neon-cyan)] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}
+            className={`block w-6 h-0.5 bg-foreground transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}
           />
           <span
-            className={`block w-6 h-0.5 bg-[var(--neon-cyan)] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`}
+            className={`block w-6 h-0.5 bg-foreground transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`}
           />
           <span
-            className={`block w-6 h-0.5 bg-[var(--neon-cyan)] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
+            className={`block w-6 h-0.5 bg-foreground transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
           />
         </button>
       </div>
@@ -93,25 +88,25 @@ export default function Navbar() {
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
           menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        } bg-[#03040a]/95 backdrop-blur-xl border-b border-[rgba(0,212,255,0.12)]`}
+        } bg-[#0a0f1c]/98 backdrop-blur-xl border-b border-[rgba(59,130,246,0.1)]`}
       >
-        <div className="px-6 py-4 flex flex-col gap-4">
+        <div className="px-6 py-4 flex flex-col gap-2">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="text-sm text-[#a0a8c0] hover:text-[var(--neon-cyan)] transition-colors"
+              className="py-3 text-sm text-[var(--text-secondary)] hover:text-foreground transition-colors"
             >
               {link.label}
             </Link>
           ))}
           <Link
-            href="#contact"
+            href="/contact"
             onClick={() => setMenuOpen(false)}
-            className="px-5 py-2 rounded-lg border border-[var(--neon-cyan)] text-[var(--neon-cyan)] text-sm font-medium text-center hover:bg-[var(--neon-cyan)] hover:text-black transition-all duration-300"
+            className="mt-2 px-5 py-3 rounded-lg bg-[var(--brand-blue)] text-white text-sm font-medium text-center"
           >
-            Get in Touch
+            Request Access
           </Link>
         </div>
       </div>

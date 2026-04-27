@@ -1,90 +1,98 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 const footerLinks = {
-  Company: ['About Us', 'Leadership', 'Careers', 'Press', 'Contact'],
-  Verticals: ['Technology', 'Consulting', 'Staffing', 'Real Estate', 'Education', 'Finance'],
-  Resources: ['Blog', 'Case Studies', 'Whitepapers', 'Events', 'Newsletter'],
+  Services: [
+    { label: 'QA & Testing', href: '/services#qa-testing' },
+    { label: 'Cloud & DevOps', href: '/services#cloud-devops' },
+    { label: 'AI & ML', href: '/services#ai-ml' },
+    { label: 'Analytics', href: '/services#analytics' },
+    { label: 'Development', href: '/services#development' },
+  ],
+  Company: [
+    { label: 'About Us', href: '/about' },
+    { label: 'Leadership', href: '/about#leadership' },
+    { label: 'Careers', href: '/careers' },
+    { label: 'Contact', href: '/contact' },
+  ],
+  Resources: [
+    { label: 'Blog', href: '/blog' },
+    { label: 'Case Studies', href: '/case-studies' },
+    { label: 'Whitepapers', href: '/resources' },
+    { label: 'Events', href: '/events' },
+  ],
 }
+
+const socialLinks = [
+  { name: 'LinkedIn', href: 'https://linkedin.com/company/conglomerateit', icon: 'L' },
+  { name: 'Twitter', href: 'https://twitter.com/conglomerateit', icon: 'X' },
+  { name: 'Facebook', href: 'https://facebook.com/conglomerateit', icon: 'F' },
+]
 
 export default function Footer() {
   return (
-    <footer id="contact" className="relative pt-20 pb-10 px-6 overflow-hidden">
+    <footer className="relative pt-20 pb-10 px-6 overflow-hidden">
       {/* Top gradient border */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(0,212,255,0.3)] to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--brand-blue)]/30 to-transparent" />
 
       {/* Background */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,212,255,0.03) 0%, transparent 60%)',
-        }}
-      />
+      <div className="absolute inset-0 gradient-radial pointer-events-none opacity-50" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative">
         {/* CTA Band */}
-        <div
-          className="rounded-2xl p-10 mb-20 text-center relative overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, rgba(0,102,255,0.12) 0%, rgba(124,58,237,0.12) 100%)',
-            border: '1px solid rgba(0,212,255,0.2)',
-          }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            aria-hidden="true"
-            style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,212,255,0.05) 0%, transparent 70%)' }}
-          />
-          <h3 className="font-sans font-bold text-3xl md:text-4xl text-foreground mb-4 text-balance relative z-10">
-            Ready to Build Something <span className="text-[var(--neon-cyan)]">Exceptional?</span>
+        <div className="rounded-2xl p-10 mb-20 text-center relative overflow-hidden bg-gradient-to-br from-[var(--brand-blue)]/10 to-[var(--brand-red)]/5 border border-[var(--brand-blue)]/20">
+          <h3 className="font-semibold text-3xl md:text-4xl text-foreground mb-4 text-balance">
+            Ready to Transform Your <span className="text-[var(--brand-blue)]">Enterprise?</span>
           </h3>
-          <p className="text-[#a0a8c0] mb-8 max-w-xl mx-auto text-lg relative z-10">
-            Partner with ConglomerateIT and unlock the full power of a multi-domain enterprise working for your success.
+          <p className="text-[var(--text-secondary)] mb-8 max-w-xl mx-auto text-lg">
+            Partner with ConglomerateIT and leverage AI-first solutions for your digital transformation journey.
           </p>
-          <div className="flex flex-wrap gap-4 justify-center relative z-10">
-            <a
-              href="mailto:info@conglomerateit.com"
-              className="px-8 py-3.5 rounded-xl bg-[var(--neon-cyan)] text-black font-semibold text-sm tracking-wide hover:shadow-[0_0_30px_rgba(0,212,255,0.5)] hover:scale-105 transition-all duration-300"
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link
+              href="/contact"
+              className="px-8 py-3.5 rounded-xl bg-[var(--brand-blue)] text-white font-medium text-sm hover:shadow-[0_0_30px_var(--brand-blue-glow)] transition-all duration-300"
             >
-              Get in Touch
-            </a>
-            <a
-              href="https://conglomerateit.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3.5 rounded-xl border border-[rgba(255,255,255,0.15)] text-foreground font-semibold text-sm tracking-wide hover:border-[var(--neon-cyan)] hover:text-[var(--neon-cyan)] transition-all duration-300"
+              Get Started Today
+            </Link>
+            <Link
+              href="/services"
+              className="px-8 py-3.5 rounded-xl border border-white/15 text-foreground font-medium text-sm hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)] transition-all duration-300"
             >
-              Visit Website
-            </a>
+              View Services
+            </Link>
           </div>
         </div>
 
         {/* Footer grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-16">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-9 h-9 rounded-lg border border-[var(--neon-cyan)] flex items-center justify-center">
-                <span className="font-mono text-xs font-bold text-[var(--neon-cyan)]">CG</span>
-              </div>
-              <span className="font-sans font-bold text-lg text-foreground">
-                Conglomerate<span className="text-[var(--neon-cyan)]">IT</span>
+          <div className="col-span-2">
+            <Link href="/" className="flex items-center gap-3 mb-5">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/banner%20logo%20latest-Wy6FwAgjDavAiB9pvHR7pRWJVuZx3Z.png"
+                alt="ConglomerateIT"
+                width={40}
+                height={40}
+                className="w-10 h-10 object-contain"
+              />
+              <span className="font-semibold text-lg text-foreground">
+                Conglomerate<span className="text-[var(--brand-blue)]">IT</span>
               </span>
-            </div>
-            <p className="text-[#6b7494] text-sm leading-relaxed mb-5">
-              A multi-domain powerhouse driving innovation and excellence across every industry we enter.
+            </Link>
+            <p className="text-[var(--text-muted)] text-sm leading-relaxed mb-5 max-w-xs">
+              AI-first enterprise transformation partner delivering exceptional results across QA, Cloud, AI, Infrastructure, Analytics, and Development.
             </p>
             <div className="flex gap-3">
-              {['LinkedIn', 'Twitter', 'Facebook'].map((s) => (
+              {socialLinks.map((social) => (
                 <a
-                  key={s}
-                  href="https://conglomerateit.com"
+                  key={social.name}
+                  href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={s}
-                  className="w-9 h-9 rounded-lg border border-[rgba(0,212,255,0.2)] flex items-center justify-center text-[#6b7494] hover:border-[var(--neon-cyan)] hover:text-[var(--neon-cyan)] transition-all duration-200"
+                  aria-label={social.name}
+                  className="w-9 h-9 rounded-lg border border-white/10 flex items-center justify-center text-[var(--text-muted)] hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)] transition-all duration-200"
                 >
-                  <span className="font-mono text-[9px] font-bold">{s[0]}</span>
+                  <span className="text-xs font-bold">{social.icon}</span>
                 </a>
               ))}
             </div>
@@ -93,20 +101,18 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="font-mono text-xs text-[var(--neon-cyan)] tracking-widest uppercase mb-5">
+              <h4 className="text-xs text-[var(--brand-blue)] tracking-widest uppercase font-medium mb-5">
                 {category}
               </h4>
               <ul className="flex flex-col gap-3">
                 {links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="https://conglomerateit.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-[#6b7494] hover:text-[var(--neon-cyan)] transition-colors duration-200"
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-[var(--text-muted)] hover:text-[var(--brand-blue)] transition-colors duration-200"
                     >
-                      {link}
-                    </a>
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -115,21 +121,19 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[rgba(0,212,255,0.08)]">
-          <p className="font-mono text-xs text-[#6b7494]">
-            &copy; {new Date().getFullYear()} ConglomerateIT. All rights reserved.
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/5">
+          <p className="text-xs text-[var(--text-muted)]">
+            &copy; {new Date().getFullYear()} ConglomerateIT LLC. All rights reserved.
           </p>
           <div className="flex gap-6">
             {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map((item) => (
-              <a
+              <Link
                 key={item}
-                href="https://conglomerateit.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-xs text-[#6b7494] hover:text-[var(--neon-cyan)] transition-colors"
+                href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
+                className="text-xs text-[var(--text-muted)] hover:text-[var(--brand-blue)] transition-colors"
               >
                 {item}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
