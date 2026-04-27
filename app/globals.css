@@ -4,16 +4,16 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Dark navy theme with red/blue brand */
-  --background: #0a0f1c;
+  /* Unified dark navy */
+  --background: #06091a;
   --foreground: #f0f4ff;
-  --card: #111827;
+  --card: #0d1224;
   --card-foreground: #f0f4ff;
-  --popover: #111827;
+  --popover: #0d1224;
   --popover-foreground: #f0f4ff;
   --primary: #3b82f6;
   --primary-foreground: #ffffff;
-  --secondary: #141c2e;
+  --secondary: #111827;
   --secondary-foreground: #94a3b8;
   --muted: #1e293b;
   --muted-foreground: #64748b;
@@ -21,25 +21,23 @@
   --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: rgba(59, 130, 246, 0.15);
+  --border: rgba(59, 130, 246, 0.12);
   --input: #1e293b;
   --ring: #3b82f6;
   --radius: 0.75rem;
 
-  /* Brand tokens - Red & Blue */
   --brand-red: #dc2626;
   --brand-blue: #3b82f6;
   --brand-blue-light: #60a5fa;
-  --brand-red-glow: rgba(220, 38, 38, 0.4);
-  --brand-blue-glow: rgba(59, 130, 246, 0.4);
-  
-  /* Neutral palette */
+  --brand-red-glow: rgba(220, 38, 38, 0.3);
+  --brand-blue-glow: rgba(59, 130, 246, 0.3);
+
   --text-primary: #f0f4ff;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  --surface-dark: #0d1424;
-  --surface-card: #111827;
-  --surface-elevated: #1e293b;
+  --surface-card: #0d1224;
+  --surface-elevated: #131d35;
+  --surface-mid: #0f1830;
 }
 
 @theme inline {
@@ -76,6 +74,7 @@
   }
   html {
     scroll-behavior: smooth;
+    background-color: var(--background);
   }
   body {
     @apply bg-background text-foreground antialiased;
@@ -83,181 +82,140 @@
   }
 }
 
-/* Gradient backgrounds */
-.gradient-radial {
-  background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+/* ─── Shared section base ───────────────────────────────── */
+.section-base {
+  position: relative;
+  overflow: hidden;
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
+/* Every section blends into the next via a bottom gradient overlay */
+.section-blend::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 8rem;
+  background: linear-gradient(to bottom, transparent, var(--background));
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── Hero gradient ─────────────────────────────────────── */
 .gradient-hero {
-  background: 
-    radial-gradient(ellipse 100% 80% at 50% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(220, 38, 38, 0.05) 0%, transparent 50%),
+  background:
+    radial-gradient(ellipse 90% 70% at 50% -10%, rgba(59, 130, 246, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 30% at 85% 85%, rgba(220, 38, 38, 0.06) 0%, transparent 50%),
     var(--background);
 }
 
-/* Glass card */
+/* ─── Soft radial used by multiple sections ─────────────── */
+.gradient-radial {
+  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(59, 130, 246, 0.06) 0%, transparent 65%);
+}
+
+/* ─── Glass card ─────────────────────────────────────────── */
 .glass-card {
-  background: rgba(17, 24, 39, 0.8);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(59, 130, 246, 0.12);
-  transition: all 0.3s ease;
+  background: rgba(13, 18, 36, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(59, 130, 246, 0.13);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-
 .glass-card:hover {
-  border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.28);
+  box-shadow: 0 0 32px rgba(59, 130, 246, 0.08);
 }
 
-/* Node card - for workflow diagrams */
-.node-card {
-  background: rgba(17, 24, 39, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  backdrop-filter: blur(8px);
-}
-
-/* Floating animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float 4s ease-in-out infinite;
-  animation-delay: 2s;
-}
-
-/* Pulse glow */
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
-
-.pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* Fade in up */
-@keyframes fadeInUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
-  }
-}
-
-.fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
-/* Typewriter cursor */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.cursor-blink {
-  animation: blink 1s step-end infinite;
-}
-
-/* Connection lines */
-.connection-line {
-  stroke: url(#blueGradient);
-  stroke-width: 2;
-  fill: none;
-  stroke-dasharray: 8 4;
-  animation: dashMove 1s linear infinite;
-}
-
-@keyframes dashMove {
-  to {
-    stroke-dashoffset: -12;
-  }
-}
-
-/* Horizontal marquee */
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.marquee-inner {
-  animation: marquee 40s linear infinite;
-  display: flex;
-  width: max-content;
-}
-
-/* Badge styles */
-.badge-blue {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  color: var(--brand-blue-light);
-}
-
-.badge-red {
-  background: rgba(220, 38, 38, 0.1);
-  border: 1px solid rgba(220, 38, 38, 0.3);
-  color: var(--brand-red);
-}
-
-/* Scroll indicator */
-@keyframes scrollBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-
-.scroll-indicator {
-  animation: scrollBounce 2s ease-in-out infinite;
-}
-
-/* Chart glow */
-.chart-glow {
-  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
-}
-
-/* Integration node */
+/* ─── Integration node ───────────────────────────────────── */
 .integration-node {
-  background: rgba(17, 24, 39, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(13, 18, 36, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
-
 .integration-node:hover {
-  border-color: rgba(59, 130, 246, 0.5);
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: 0 0 22px rgba(59, 130, 246, 0.18);
   transform: translateY(-2px);
 }
 
-/* White section styling */
-.white-section {
-  background: #ffffff;
-  color: #0f172a;
+/* ─── Animations ─────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-7px); }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-float-delayed { animation: float 4s ease-in-out 2s infinite; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.cursor-blink { animation: blink 1s step-end infinite; }
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
+}
+.scroll-indicator { animation: scrollBounce 2s ease-in-out infinite; }
+
+/* ─── Animated connection lines ──────────────────────────── */
+@keyframes dashMove {
+  to { stroke-dashoffset: -20; }
+}
+.connection-line {
+  stroke-dasharray: 6 5;
+  animation: dashMove 1.4s linear infinite;
 }
 
-.white-section .text-muted {
-  color: #64748b;
+/* ─── Chart ──────────────────────────────────────────────── */
+.chart-glow { filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.35)); }
+
+@keyframes drawLine {
+  from { stroke-dashoffset: var(--path-length, 2000); }
+  to   { stroke-dashoffset: 0; }
+}
+.chart-animate {
+  stroke-dasharray: var(--path-length, 2000);
+  stroke-dashoffset: var(--path-length, 2000);
+  animation: drawLine 1s ease-out forwards;
 }
 
-/* CTA button hover glow */
-.cta-button {
-  background: var(--brand-blue);
-  transition: all 0.3s ease;
+/* ─── Testimonials marquee ───────────────────────────────── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ─── Badge helpers ──────────────────────────────────────── */
+.badge-blue {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  color: var(--brand-blue-light);
+}
+.badge-red {
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.28);
+  color: var(--brand-red);
 }
 
-.cta-button:hover {
-  box-shadow: 0 0 30px var(--brand-blue-glow);
-  transform: scale(1.02);
-}
-
-/* Gradient text */
+/* ─── Gradient text ──────────────────────────────────────── */
 .gradient-text {
   background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);
   -webkit-background-clip: text;
@@ -265,19 +223,51 @@
   background-clip: text;
 }
 
-/* Red accent text */
-.text-accent-red {
-  color: var(--brand-red);
+/* ─── Lively button hovers ───────────────────────────────── */
+.btn-primary {
+  background: var(--brand-blue);
+  color: #fff;
+  border-radius: 0.75rem;
+  padding: 0.875rem 2rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-primary:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(59, 130, 246, 0.38);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--foreground);
+  border-radius: 0.75rem;
+  padding: 0.875rem 2rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+.btn-ghost:hover {
+  border-color: rgba(255,255,255,0.30);
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-2px);
 }
 
-/* Line clamp utilities */
+/* ─── Utilities ──────────────────────────────────────────── */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;

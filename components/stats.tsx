@@ -52,19 +52,18 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
 
 export default function Stats() {
   return (
-    <section id="stats" className="relative py-24 px-6 overflow-hidden">
+    <section id="stats" className="section-base relative">
       {/* Background accent */}
       <div
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
-          style={{
+        style={{
           background:
             'radial-gradient(ellipse 100% 60% at 50% 50%, rgba(26,79,204,0.05) 0%, transparent 70%)',
         }}
       />
-      {/* Top/bottom border lines */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(26,79,204,0.25)] to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(26,79,204,0.25)] to-transparent" />
+      {/* Blend into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[var(--background)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">

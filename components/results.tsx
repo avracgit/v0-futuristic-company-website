@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { resultStats } from '@/lib/data'
 
 function CountUp({ target, prefix = '', suffix = '' }: { target: number; prefix?: string; suffix: string }) {
   const [count, setCount] = useState(0)
@@ -11,114 +10,165 @@ function CountUp({ target, prefix = '', suffix = '' }: { target: number; prefix?
   useEffect(() => {
     const el = ref.current
     if (!el) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !observed.current) {
-          observed.current = true
-          let start = 0
-          const duration = 1500
-          const step = (timestamp: number) => {
-            if (!start) start = timestamp
-            const progress = Math.min((timestamp - start) / duration, 1)
-            const eased = 1 - Math.pow(1 - progress, 3)
-            setCount(Math.floor(eased * target))
-            if (progress < 1) requestAnimationFrame(step)
-            else setCount(target)
-          }
-          requestAnimationFrame(step)
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !observed.current) {
+        observed.current = true
+        let start = 0
+        const duration = 1400
+        const step = (ts: number) => {
+          if (!start) start = ts
+          const p = Math.min((ts - start) / duration, 1)
+          const eased = 1 - Math.pow(1 - p, 3)
+          setCount(Math.floor(eased * target))
+          if (p < 1) requestAnimationFrame(step)
+          else setCount(target)
         }
-      },
-      { threshold: 0.3 }
-    )
-
+        requestAnimationFrame(step)
+      }
+    }, { threshold: 0.3 })
     observer.observe(el)
     return () => observer.disconnect()
   }, [target])
 
-  return (
-    <span ref={ref}>
-      {prefix}{count}{suffix}
-    </span>
-  )
+  return <span ref={ref}>{prefix}{count}{suffix}</span>
 }
 
-// Generate chart data
-const generateChartData = () => {
-  const points = []
-  let value = 20
-  for (let i = 0; i <= 30; i++) {
-    value += Math.random() * 4 - 1
-    value = Math.max(15, Math.min(45, value))
-    points.push({ day: i, value })
+// Each tab has its own seed so the chart looks distinct
+const TAB_DATA: Record<string, { seed: number; peak: number; endLabel: string; stats: { value: number; prefix: string; suffix: string; label: string; period: string }[] }> = {
+  EdTech: {
+    seed: 42, peak: 38,
+    endLabel: '+38%',
+    stats: [
+      { value: 38, prefix: '+', suffix: '%', label: 'Student Engagement', period: 'in 30 Days' },
+      { value: 52, prefix: '+', suffix: '%', label: 'Course Completion', period: 'in 60 Days' },
+      { value: 29, prefix: '+', suffix: '%', label: 'Lead Generation', period: 'in 45 Days' },
+      { value: 44, prefix: '+', suffix: '%', label: 'Retention Growth', period: 'in 90 Days' },
+    ],
+  },
+  SaaS: {
+    seed: 17, peak: 40,
+    endLabel: '+40%',
+    stats: [
+      { value: 35, prefix: '+', suffix: '%', label: 'Engagement Increase', period: 'in 30 Days' },
+      { value: 56, prefix: '+', suffix: '%', label: 'Conversion Rate Boost', period: 'in 60 Days' },
+      { value: 25, prefix: '+', suffix: '%', label: 'Lead Generation Rise', period: 'in 45 Days' },
+      { value: 42, prefix: '+', suffix: '%', label: 'Customer Retention', period: 'in 90 Days' },
+    ],
+  },
+  Fintech: {
+    seed: 99, peak: 45,
+    endLabel: '+45%',
+    stats: [
+      { value: 41, prefix: '+', suffix: '%', label: 'Transaction Volume', period: 'in 30 Days' },
+      { value: 63, prefix: '+', suffix: '%', label: 'Approval Rate', period: 'in 60 Days' },
+      { value: 31, prefix: '+', suffix: '%', label: 'User Acquisition', period: 'in 45 Days' },
+      { value: 48, prefix: '+', suffix: '%', label: 'Portfolio Growth', period: 'in 90 Days' },
+    ],
+  },
+}
+
+function seededRandom(seed: number) {
+  let s = seed
+  return () => {
+    s = (s * 16807 + 0) % 2147483647
+    return (s - 1) / 2147483646
   }
-  // Ensure upward trend at the end
-  points[28] = { day: 28, value: 35 }
-  points[29] = { day: 29, value: 38 }
-  points[30] = { day: 30, value: 40 }
+}
+
+function generateChartPoints(seed: number, peak: number) {
+  const rand = seededRandom(seed)
+  const points: { x: number; y: number }[] = []
+  let val = 18
+  for (let i = 0; i <= 30; i++) {
+    val += (rand() - 0.42) * 3.5
+    val = Math.max(12, Math.min(peak - 4, val))
+    points.push({ x: i, y: val })
+  }
+  // Force a clear upward tail
+  points[26] = { x: 26, y: peak - 8 }
+  points[27] = { x: 27, y: peak - 5 }
+  points[28] = { x: 28, y: peak - 3 }
+  points[29] = { x: 29, y: peak - 1 }
+  points[30] = { x: 30, y: peak }
   return points
 }
 
-const chartData = generateChartData()
+const W = 600, H = 200, PAD = { left: 44, right: 16, top: 16, bottom: 28 }
+const innerW = W - PAD.left - PAD.right
+const innerH = H - PAD.top - PAD.bottom
+
+function xS(day: number) { return PAD.left + (day / 30) * innerW }
+function yS(val: number) { return H - PAD.bottom - ((val - 5) / 50) * innerH }
+
+function buildPath(pts: { x: number; y: number }[]) {
+  return pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${xS(p.x).toFixed(1)},${yS(p.y).toFixed(1)}`).join(' ')
+}
+
+function buildArea(pts: { x: number; y: number }[]) {
+  return `${buildPath(pts)} L${xS(30)},${H - PAD.bottom} L${xS(0)},${H - PAD.bottom}Z`
+}
+
+const XAXIS = ['Today', 'Day 5', 'Day 10', 'Day 15', 'Day 20', 'Day 25', 'Day 30']
+const YVALS = [10, 20, 30, 40]
 
 export default function Results() {
-  const [activeTab, setActiveTab] = useState('SaaS')
-  const tabs = ['EdTech', 'SaaS', 'Fintech']
+  const [activeTab, setActiveTab] = useState<'EdTech' | 'SaaS' | 'Fintech'>('SaaS')
+  const [animKey, setAnimKey] = useState(0)
+  const tabs = ['EdTech', 'SaaS', 'Fintech'] as const
 
-  // Create SVG path from data
-  const width = 600
-  const height = 200
-  const padding = 40
+  const data = TAB_DATA[activeTab]
+  const pts = generateChartPoints(data.seed, data.peak)
+  const linePath = buildPath(pts)
+  const areaPath = buildArea(pts)
 
-  const xScale = (day: number) => padding + (day / 30) * (width - padding * 2)
-  const yScale = (value: number) => height - padding - ((value - 10) / 40) * (height - padding * 2)
+  // Approximate path length for draw animation
+  const pathLen = 1800
 
-  const linePath = chartData
-    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${xScale(p.day)} ${yScale(p.value)}`)
-    .join(' ')
-
-  const areaPath = `${linePath} L ${xScale(30)} ${height - padding} L ${xScale(0)} ${height - padding} Z`
+  function handleTab(tab: typeof activeTab) {
+    if (tab === activeTab) return
+    setActiveTab(tab)
+    setAnimKey(k => k + 1)
+  }
 
   return (
-    <section className="relative py-24 px-6 overflow-hidden">
-      {/* Background */}
+    <section className="section-base section-blend relative">
       <div className="absolute inset-0 gradient-radial pointer-events-none" />
 
       <div className="max-w-6xl mx-auto">
         {/* Badge */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-blue">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-blue text-xs font-medium">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            <span className="text-xs font-medium">Results</span>
+            Results
           </div>
         </div>
 
         {/* Headline */}
-        <div className="text-center mb-16">
-          <h2 className="font-semibold text-3xl md:text-4xl lg:text-5xl text-foreground mb-4 text-balance">
-            We can increase your revenue, further client relationships,
-            <br className="hidden md:block" />
-            secure target companies. We have <span className="text-[var(--brand-blue)]">40% better conversion</span>
-            <br className="hidden md:block" />
-            than existing automation tools.
+        <div className="text-center mb-14">
+          <h2 className="font-semibold text-3xl md:text-4xl text-foreground mb-3 text-balance leading-tight">
+            We can increase your revenue, further client relationships,<br className="hidden md:block" />
+            secure target companies. We have{' '}
+            <span className="text-[var(--brand-blue)]">40% better conversion</span>
+            <br className="hidden md:block" /> than existing automation tools.
           </h2>
         </div>
 
-        {/* Chart Section */}
-        <div className="glass-card rounded-2xl p-6 md:p-8 mb-16">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-            <h3 className="text-lg font-medium text-foreground">Outreach</h3>
+        {/* Chart card */}
+        <div className="glass-card rounded-2xl p-6 md:p-8 mb-14">
+          {/* Chart header */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <h3 className="text-base font-medium text-foreground">Outreach Performance</h3>
             <div className="flex items-center gap-2">
-              {tabs.map((tab) => (
+              {tabs.map(tab => (
                 <button
                   key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-1.5 rounded-lg text-sm transition-all ${
+                  onClick={() => handleTab(tab)}
+                  className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     activeTab === tab
-                      ? 'bg-[var(--brand-blue)] text-white'
-                      : 'bg-white/5 text-[var(--text-secondary)] hover:bg-white/10'
+                      ? 'bg-[var(--brand-blue)] text-white shadow-md shadow-blue-500/20'
+                      : 'bg-white/5 text-[var(--text-secondary)] hover:bg-white/10 hover:text-foreground'
                   }`}
                 >
                   {tab}
@@ -127,108 +177,74 @@ export default function Results() {
             </div>
           </div>
 
-          {/* Chart */}
-          <div className="relative">
-            <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto chart-glow">
+          {/* SVG chart */}
+          <div className="relative chart-glow" key={animKey}>
+            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
               <defs>
-                <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--brand-blue)" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="var(--brand-blue)" stopOpacity="0" />
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stopColor="#3b82f6" stopOpacity="0.28" />
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
                 </linearGradient>
-                <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="var(--brand-blue)" stopOpacity="0.5" />
-                  <stop offset="100%" stopColor="var(--brand-blue)" stopOpacity="1" />
+                <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%"   stopColor="#3b82f6" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="1" />
                 </linearGradient>
+                <clipPath id="chartClip">
+                  <rect x={PAD.left} y={PAD.top} width={innerW} height={innerH} />
+                </clipPath>
               </defs>
 
-              {/* Y-axis labels */}
-              {[0, 10, 20, 30, 40].map((val) => (
-                <g key={val}>
-                  <text
-                    x={padding - 10}
-                    y={yScale(val + 10)}
-                    textAnchor="end"
-                    className="fill-[var(--text-muted)] text-[10px]"
-                  >
-                    {val}%
-                  </text>
-                  <line
-                    x1={padding}
-                    y1={yScale(val + 10)}
-                    x2={width - padding}
-                    y2={yScale(val + 10)}
-                    stroke="rgba(255,255,255,0.05)"
-                    strokeDasharray="4 4"
-                  />
+              {/* Grid lines & Y labels */}
+              {YVALS.map(v => (
+                <g key={v}>
+                  <text x={PAD.left - 6} y={yS(v) + 4} textAnchor="end" fontSize="9" fill="rgba(100,116,139,0.8)">{v}%</text>
+                  <line x1={PAD.left} y1={yS(v)} x2={W - PAD.right} y2={yS(v)} stroke="rgba(255,255,255,0.04)" strokeDasharray="4 4" />
                 </g>
               ))}
 
-              {/* X-axis labels */}
-              {['Today', 'Day 5', 'Day 10', 'Day 15', 'Day 20', 'Day 25', 'Day 30'].map((label, i) => (
-                <text
-                  key={label}
-                  x={xScale(i * 5)}
-                  y={height - 10}
-                  textAnchor="middle"
-                  className="fill-[var(--text-muted)] text-[10px]"
-                >
-                  {label}
-                </text>
+              {/* X labels */}
+              {XAXIS.map((label, i) => (
+                <text key={label} x={xS(i * 5)} y={H - 8} textAnchor="middle" fontSize="9" fill="rgba(100,116,139,0.8)">{label}</text>
               ))}
 
-              {/* Area fill */}
-              <path d={areaPath} fill="url(#areaGradient)" />
+              {/* Area fill — clipped, no animation needed */}
+              <path d={areaPath} fill="url(#areaGrad)" clipPath="url(#chartClip)" />
 
-              {/* Line */}
+              {/* Line — animated draw */}
               <path
                 d={linePath}
                 fill="none"
-                stroke="url(#lineGradient)"
+                stroke="url(#lineGrad)"
                 strokeWidth="2"
                 strokeLinecap="round"
+                strokeLinejoin="round"
+                clipPath="url(#chartClip)"
+                style={{ '--path-length': pathLen } as React.CSSProperties}
+                className="chart-animate"
               />
 
-              {/* End point */}
-              <circle
-                cx={xScale(30)}
-                cy={yScale(40)}
-                r="6"
-                fill="var(--brand-blue)"
-                stroke="var(--background)"
-                strokeWidth="2"
-              />
+              {/* End dot */}
+              <circle cx={xS(30)} cy={yS(data.peak)} r="5" fill="#3b82f6" stroke="#06091a" strokeWidth="2" />
 
-              {/* Maximum Value label */}
-              <g transform={`translate(${xScale(30) + 10}, ${yScale(40) - 10})`}>
-                <rect
-                  x="-5"
-                  y="-15"
-                  width="80"
-                  height="30"
-                  rx="4"
-                  fill="var(--surface-card)"
-                  stroke="rgba(255,255,255,0.1)"
-                />
-                <text x="35" y="-2" textAnchor="middle" className="fill-[var(--text-muted)] text-[9px]">
-                  Maximum Value
-                </text>
-                <text x="35" y="10" textAnchor="middle" className="fill-foreground text-[10px] font-medium">
-                  (+40%)
-                </text>
+              {/* Max label */}
+              <g transform={`translate(${xS(30) - 78},${yS(data.peak) - 32})`}>
+                <rect width="72" height="26" rx="5" fill="rgba(13,18,36,0.95)" stroke="rgba(59,130,246,0.3)" strokeWidth="1" />
+                <text x="36" y="10" textAnchor="middle" fontSize="8" fill="rgba(148,163,184,0.8)">Maximum</text>
+                <text x="36" y="20" textAnchor="middle" fontSize="9" fill="#f0f4ff" fontWeight="600">{data.endLabel}</text>
               </g>
             </svg>
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {resultStats.map((stat, i) => (
-            <div key={i} className="text-center">
-              <div className="text-4xl md:text-5xl lg:text-6xl font-semibold text-[var(--brand-blue)] mb-2">
-                <CountUp target={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {data.stats.map((s, i) => (
+            <div key={`${activeTab}-${i}`} className="text-center fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
+              <div className="text-4xl md:text-5xl font-semibold text-[var(--brand-blue)] mb-1">
+                <CountUp target={s.value} prefix={s.prefix} suffix={s.suffix} />
               </div>
-              <p className="text-sm text-foreground font-medium mb-1">{stat.label}</p>
-              <p className="text-xs text-[var(--text-muted)]">{stat.period}</p>
+              <p className="text-sm font-medium text-foreground mb-0.5">{s.label}</p>
+              <p className="text-xs text-[var(--text-muted)]">{s.period}</p>
             </div>
           ))}
         </div>
