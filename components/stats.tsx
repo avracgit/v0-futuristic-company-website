@@ -52,19 +52,10 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
 
 export default function Stats() {
   return (
-    <section id="stats" className="relative py-24 px-6 overflow-hidden">
-      {/* Background accent */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-          style={{
-          background:
-            'radial-gradient(ellipse 100% 60% at 50% 50%, rgba(26,79,204,0.05) 0%, transparent 70%)',
-        }}
-      />
-      {/* Top/bottom border lines */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(26,79,204,0.25)] to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(26,79,204,0.25)] to-transparent" />
+    <section id="stats" className="relative py-24 px-6 overflow-hidden section-stats">
+      {/* Top/bottom subtle lines */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
 
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -76,10 +67,10 @@ export default function Stats() {
               >
                 <CountUp target={stat.value} suffix={stat.suffix} />
               </div>
-              <p className="font-mono text-xs text-[#6b7494] tracking-widest uppercase">{stat.label}</p>
+              <p className="text-sm text-[var(--text-muted)] tracking-wide">{stat.label}</p>
               <div
-                className="mt-4 h-px w-0 group-hover:w-full mx-auto transition-all duration-500"
-                style={{ background: `linear-gradient(90deg, transparent, ${stat.color}, transparent)` }}
+                className="mt-4 h-0.5 w-0 group-hover:w-16 mx-auto transition-all duration-500 rounded-full"
+                style={{ background: stat.color }}
               />
             </div>
           ))}

@@ -2,30 +2,32 @@
 
 import Image from 'next/image'
 
+// Positioned integration nodes with exact coordinates for line connections
 const integrationNodes = [
-  // Top row
-  { name: 'Salesforce', position: 'top-[15%] left-[25%]', delay: '0s' },
-  { name: 'AWS', position: 'top-[10%] left-[42%]', delay: '0.2s' },
-  { name: 'Azure', position: 'top-[10%] right-[42%]', delay: '0.4s' },
-  { name: 'GCP', position: 'top-[15%] right-[25%]', delay: '0.6s' },
+  // Top arc
+  { name: 'Salesforce', x: 15, y: 10 },
+  { name: 'AWS', x: 35, y: 5 },
+  { name: 'Azure', x: 50, y: 3 },
+  { name: 'GCP', x: 65, y: 5 },
+  { name: 'ServiceNow', x: 85, y: 10 },
   
-  // Upper middle
-  { name: 'ServiceNow', position: 'top-[30%] left-[15%]', delay: '0.8s' },
-  { name: 'Kubernetes', position: 'top-[28%] right-[15%]', delay: '1s' },
+  // Upper sides
+  { name: 'Kubernetes', x: 8, y: 30 },
+  { name: 'Terraform', x: 92, y: 30 },
   
-  // Middle row
-  { name: 'Docker', position: 'top-[45%] left-[8%]', delay: '1.2s' },
-  { name: 'Terraform', position: 'top-[45%] right-[8%]', delay: '1.4s' },
+  // Middle sides
+  { name: 'Docker', x: 5, y: 50 },
+  { name: 'GitHub', x: 95, y: 50 },
   
-  // Lower middle
-  { name: 'Jenkins', position: 'top-[62%] left-[15%]', delay: '1.6s' },
-  { name: 'GitHub', position: 'top-[62%] right-[15%]', delay: '1.8s' },
+  // Lower sides
+  { name: 'Jenkins', x: 8, y: 70 },
+  { name: 'Datadog', x: 92, y: 70 },
   
-  // Bottom row
-  { name: 'Jira', position: 'bottom-[15%] left-[25%]', delay: '2s' },
-  { name: 'Slack', position: 'bottom-[10%] left-[42%]', delay: '2.2s' },
-  { name: 'Teams', position: 'bottom-[10%] right-[42%]', delay: '2.4s' },
-  { name: 'Datadog', position: 'bottom-[15%] right-[25%]', delay: '2.6s' },
+  // Bottom arc
+  { name: 'Jira', x: 15, y: 90 },
+  { name: 'Slack', x: 35, y: 95 },
+  { name: 'Teams', x: 65, y: 95 },
+  { name: 'Splunk', x: 85, y: 90 },
 ]
 
 const IntegrationIcon = ({ name }: { name: string }) => {
@@ -37,7 +39,7 @@ const IntegrationIcon = ({ name }: { name: string }) => {
     ),
     AWS: (
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 01-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 01-.287-.375 6.18 6.18 0 01-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.256-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103-.296.072-.583.16-.863.271a2.053 2.053 0 01-.167.064.29.29 0 01-.08.016c-.072 0-.112-.057-.112-.183v-.392c0-.096.016-.167.056-.215a.606.606 0 01.168-.167 3.15 3.15 0 01.863-.304 4.41 4.41 0 011.109-.128c.839 0 1.454.191 1.843.575.39.384.583.966.583 1.75v2.3zm-3.246.91c.264 0 .535-.048.822-.144.288-.096.551-.272.783-.527a1.5 1.5 0 00.359-.606c.064-.192.096-.424.096-.695v-.336a6.23 6.23 0 00-.735-.136 6.037 6.037 0 00-.75-.048c-.535 0-.926.103-1.19.32-.263.215-.39.518-.39.918 0 .375.095.657.287.86.191.2.47.394.718.394zm6.41 1.052a.382.382 0 01-.248-.072c-.056-.04-.104-.12-.144-.24L7.4 5.91c-.04-.127-.06-.208-.06-.24 0-.096.048-.152.143-.152h.782c.12 0 .208.025.256.072.055.048.103.12.143.24l1.52 5.992 1.413-5.992c.032-.127.08-.192.135-.24a.48.48 0 01.264-.072h.639c.12 0 .207.025.263.072.056.048.104.12.136.24l1.429 6.064L16.04 5.79c.04-.127.095-.192.143-.24a.477.477 0 01.255-.072h.743c.096 0 .151.048.151.152 0 .032-.008.063-.016.104a1.03 1.03 0 01-.048.143l-2.148 5.767c-.04.12-.088.2-.144.24-.056.04-.135.072-.248.072h-.687c-.12 0-.208-.024-.264-.072-.056-.048-.103-.12-.135-.248l-1.405-5.832-1.397 5.824c-.032.127-.08.2-.135.248a.458.458 0 01-.264.072h-.687zm10.255.168c-.414 0-.83-.048-1.237-.144-.406-.096-.727-.2-.95-.328a.612.612 0 01-.215-.168.435.435 0 01-.048-.199v-.407c0-.127.048-.183.136-.183.032 0 .064.008.096.016.04.008.095.04.16.072.215.096.447.176.702.24.264.063.52.096.782.096.415 0 .735-.072.966-.216.231-.144.35-.351.35-.622a.58.58 0 00-.16-.415c-.112-.112-.319-.215-.614-.312l-.878-.272c-.447-.143-.774-.351-.982-.622-.207-.272-.31-.573-.31-.91 0-.263.056-.495.167-.695.112-.2.263-.375.447-.519.184-.144.399-.255.654-.335a2.762 2.762 0 01.814-.112c.143 0 .295.008.446.024.151.024.295.056.43.088.128.04.248.08.359.12.112.04.2.08.255.12a.534.534 0 01.176.152c.032.04.048.103.048.191v.376c0 .12-.048.184-.136.184a.614.614 0 01-.22-.072 2.657 2.657 0 00-1.117-.24c-.375 0-.67.056-.878.176-.207.12-.31.303-.31.558 0 .16.056.303.175.423.12.12.343.24.67.352l.862.272c.438.144.758.343.958.599.2.255.295.55.295.886 0 .272-.056.52-.16.735a1.581 1.581 0 01-.455.543 2.02 2.02 0 01-.71.335 3.167 3.167 0 01-.926.128z"/>
+        <path d="M18.75 11.35a4.32 4.32 0 01-.79-.08 3.55 3.55 0 01-.73-.2l-.14-.07-.12.09a4.35 4.35 0 01-4.16 1.14l-.13-.04-.1.1a5.3 5.3 0 01-3.85 1.63 5.34 5.34 0 01-3.85-1.63l-.1-.1-.14.04a4.34 4.34 0 01-1.14.15A4.35 4.35 0 010 8.02a4.35 4.35 0 014.35-4.35c.38 0 .76.05 1.13.15l.13.04.1-.1a5.34 5.34 0 017.7 0l.1.1.14-.04a4.2 4.2 0 011.13-.15c.26 0 .52.02.77.08a3.45 3.45 0 01.73.2l.14.07.11-.09a4.35 4.35 0 015.32 6.87 4.35 4.35 0 01-2.85 2.55z"/>
       </svg>
     ),
     Azure: (
@@ -47,7 +49,7 @@ const IntegrationIcon = ({ name }: { name: string }) => {
     ),
     GCP: (
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12.19 2.38a9.344 9.344 0 00-9.234 6.893c.053-.02-.055.013 0 0-3.875 2.551-3.922 8.11-.247 10.941l.006-.007-.007.03a6.717 6.717 0 005.752 3.288h7.208c3.142.001 5.912-2.074 6.786-5.09.875-3.016-.23-6.29-2.709-8.026l-.003.012.004-.011a9.344 9.344 0 00-7.556-8.03zm.043 4.032c2.307-.011 4.373 1.39 5.247 3.562l-2.616 2.604a3.543 3.543 0 00-2.636-1.178 3.579 3.579 0 00-3.579 3.579 3.579 3.579 0 003.579 3.579 3.479 3.479 0 002.975-1.689H12.19v-3.479h6.79c.225 1.031.174 2.115-.149 3.13a6.717 6.717 0 01-6.598 4.623H5.425a3.543 3.543 0 01-3.027-1.723c-1.6-2.497-.93-5.848 1.524-7.593l.007.004-.006-.008a6.174 6.174 0 016.31-5.411z"/>
+        <path d="M12.19 2.38a9.344 9.344 0 00-9.234 6.893c.053-.02-.055.013 0 0-3.875 2.551-3.922 8.11-.247 10.941l.006-.007-.007.03a6.717 6.717 0 005.752 3.288h7.208c3.142.001 5.912-2.074 6.786-5.09.875-3.016-.23-6.29-2.709-8.026l-.003.012.004-.011a9.344 9.344 0 00-7.556-8.03z"/>
       </svg>
     ),
     ServiceNow: (
@@ -57,17 +59,17 @@ const IntegrationIcon = ({ name }: { name: string }) => {
     ),
     Kubernetes: (
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M10.204 14.35l.007.01-.999 2.413a5.171 5.171 0 01-2.075-2.597l2.578-.437.004.005a.44.44 0 01.485.606zm-.833-2.129a.44.44 0 00.173-.756l.002-.011L7.585 9.7a5.143 5.143 0 00-.73 3.255l2.514-.725.002-.009zm1.145-1.98a.44.44 0 00.699-.337l-.01-.014.15-2.62a5.144 5.144 0 00-3.01 1.442l2.164 1.533.007-.004zm2.369 2.046a.44.44 0 00-.283.74l.008.009-.999 2.412a5.15 5.15 0 002.074-2.597l-2.578-.437-.222-.127zm.833-2.129a.44.44 0 01-.173-.756l-.002-.011 1.961-1.754a5.143 5.143 0 01.73 3.255l-2.514-.725-.002-.009zm-1.145-1.98a.44.44 0 01-.699-.337l.01-.014-.15-2.62a5.144 5.144 0 013.01 1.442l-2.164 1.533-.007-.004zM12 17.272a5.26 5.26 0 002.25-.508l-1.096-2.351a.44.44 0 01-.615-.597l.002-.006-1.096 2.351a5.26 5.26 0 002.555.111zM12 6.066a5.26 5.26 0 00-2.25.508l1.096 2.351a.44.44 0 00.615.597l-.002.006 1.096-2.351a5.26 5.26 0 00-.555-.111z"/>
+        <path d="M10.204 14.35l.007.01-.999 2.413a5.171 5.171 0 01-2.075-2.597l2.578-.437.004.005a.44.44 0 01.485.606zm-.833-2.129a.44.44 0 00.173-.756l.002-.011L7.585 9.7a5.143 5.143 0 00-.73 3.255l2.514-.725.002-.009z"/>
       </svg>
     ),
     Docker: (
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.186m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288z"/>
+        <path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.186"/>
       </svg>
     ),
     Terraform: (
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M1.44 0v7.575l6.561 3.79V3.79zm7.409 4.256v7.574l6.56 3.786V7.998zm6.56-4.256L8.849 3.79v7.574l6.56-3.787zm.849 8.303v7.574l6.56 3.787V12.09z"/>
+        <path d="M1.44 0v7.575l6.561 3.79V3.79zm7.409 4.256v7.574l6.56 3.786V7.998zm6.56-4.256L8.849 3.79v7.574l6.56-3.787z"/>
       </svg>
     ),
     Jenkins: (
@@ -82,22 +84,27 @@ const IntegrationIcon = ({ name }: { name: string }) => {
     ),
     Jira: (
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M11.571 11.513H0a5.218 5.218 0 005.232 5.215h2.13v2.057A5.215 5.215 0 0012.575 24V12.518a1.005 1.005 0 00-1.005-1.005zm5.723-5.756H5.736a5.215 5.215 0 005.215 5.214h2.129v2.058a5.218 5.218 0 005.215 5.214V6.758a1.001 1.001 0 00-1.001-1.001zM23.013 0H11.455a5.215 5.215 0 005.215 5.215h2.129v2.057A5.215 5.215 0 0024 12.483V1.005A1.001 1.001 0 0023.013 0z"/>
+        <path d="M11.571 11.513H0a5.218 5.218 0 005.232 5.215h2.13v2.057A5.215 5.215 0 0012.575 24V12.518a1.005 1.005 0 00-1.005-1.005z"/>
       </svg>
     ),
     Slack: (
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M5.042 15.165a2.528 2.528 0 01-2.52 2.523A2.528 2.528 0 010 15.165a2.527 2.527 0 012.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 012.521-2.52 2.527 2.527 0 012.521 2.52v6.313A2.528 2.528 0 018.834 24a2.528 2.528 0 01-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 01-2.521-2.52A2.528 2.528 0 018.834 0a2.528 2.528 0 012.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 012.521 2.521 2.528 2.528 0 01-2.521 2.521H2.522A2.528 2.528 0 010 8.834a2.528 2.528 0 012.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 012.522-2.521A2.528 2.528 0 0124 8.834a2.528 2.528 0 01-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 01-2.523 2.521 2.527 2.527 0 01-2.52-2.521V2.522A2.527 2.527 0 0115.165 0a2.528 2.528 0 012.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 012.523 2.522A2.528 2.528 0 0115.165 24a2.527 2.527 0 01-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 01-2.52-2.523 2.526 2.526 0 012.52-2.52h6.313A2.527 2.527 0 0124 15.165a2.528 2.528 0 01-2.522 2.523h-6.313z"/>
+        <path d="M5.042 15.165a2.528 2.528 0 01-2.52 2.523A2.528 2.528 0 010 15.165a2.527 2.527 0 012.522-2.52h2.52v2.52z"/>
       </svg>
     ),
     Teams: (
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.625 8.03h-5.25V6h6.75a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-6.75v-2.03h5.25V8.03zM9.375 18h1.875v3.75a.75.75 0 01-.75.75H2.625a.75.75 0 01-.75-.75V7.5a.75.75 0 01.75-.75H10.5a.75.75 0 01.75.75v3.75H9.375V18z"/>
+        <path d="M20.625 8.03h-5.25V6h6.75a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-6.75v-2.03h5.25V8.03z"/>
       </svg>
     ),
     Datadog: (
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
         <circle cx="12" cy="12" r="10" />
+      </svg>
+    ),
+    Splunk: (
+      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
       </svg>
     ),
   }
@@ -110,15 +117,15 @@ const IntegrationIcon = ({ name }: { name: string }) => {
 }
 
 export default function Integrations() {
-  return (
-    <section className="relative py-24 px-6 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 gradient-radial pointer-events-none" />
+  const centerX = 50
+  const centerY = 50
 
+  return (
+    <section className="relative py-24 px-6 overflow-hidden section-integrations">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="font-semibold text-3xl md:text-4xl lg:text-5xl text-foreground mb-4 text-balance">
+          <h2 className="font-semibold text-3xl md:text-4xl lg:text-5xl text-[var(--foreground)] mb-4 text-balance">
             ConglomerateIT Connects You
             <br />
             With <span className="text-[var(--brand-blue)]">25+ Technology Partners</span>
@@ -127,37 +134,57 @@ export default function Integrations() {
 
         {/* Integration Network */}
         <div className="relative max-w-4xl mx-auto">
-          {/* Central panel */}
-          <div className="relative bg-[var(--surface-card)] rounded-2xl border border-white/10 p-8 min-h-[500px]">
-            {/* Connection lines SVG */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+          <div className="relative bg-white rounded-2xl border border-[var(--border)] shadow-xl p-8 aspect-square max-h-[600px]">
+            {/* SVG for connection lines */}
+            <svg 
+              className="absolute inset-0 w-full h-full pointer-events-none" 
+              viewBox="0 0 100 100"
+              preserveAspectRatio="xMidYMid meet"
+            >
               <defs>
-                <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="var(--brand-blue)" stopOpacity="0.2" />
-                  <stop offset="50%" stopColor="var(--brand-blue)" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="var(--brand-blue)" stopOpacity="0.2" />
+                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="var(--brand-blue)" stopOpacity="0.1" />
+                  <stop offset="50%" stopColor="var(--brand-blue)" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="var(--brand-blue)" stopOpacity="0.1" />
                 </linearGradient>
               </defs>
-              {/* Vertical center line */}
-              <line x1="50%" y1="20%" x2="50%" y2="80%" className="connection-line" />
-              {/* Horizontal center line */}
-              <line x1="20%" y1="50%" x2="80%" y2="50%" className="connection-line" />
-              {/* Diagonal lines */}
-              <line x1="25%" y1="25%" x2="50%" y2="50%" className="connection-line" />
-              <line x1="75%" y1="25%" x2="50%" y2="50%" className="connection-line" />
-              <line x1="25%" y1="75%" x2="50%" y2="50%" className="connection-line" />
-              <line x1="75%" y1="75%" x2="50%" y2="50%" className="connection-line" />
+              
+              {/* Connection lines from center to each node */}
+              {integrationNodes.map((node, i) => (
+                <line
+                  key={`line-${i}`}
+                  x1={centerX}
+                  y1={centerY}
+                  x2={node.x}
+                  y2={node.y}
+                  stroke="url(#lineGrad)"
+                  strokeWidth="0.3"
+                  className="connection-line"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                />
+              ))}
             </svg>
 
-            {/* Center logo */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-              <div className="w-16 h-16 rounded-2xl bg-[var(--surface-elevated)] border border-[var(--brand-blue)]/30 flex items-center justify-center shadow-lg shadow-[var(--brand-blue)]/20">
+            {/* Center logo with pulse effect */}
+            <div 
+              className="absolute z-20"
+              style={{ 
+                left: '50%', 
+                top: '50%', 
+                transform: 'translate(-50%, -50%)' 
+              }}
+            >
+              {/* Pulse rings */}
+              <div className="absolute inset-0 -m-4 rounded-full border border-[var(--brand-blue)]/20 pulse-ring" />
+              <div className="absolute inset-0 -m-8 rounded-full border border-[var(--brand-blue)]/10 pulse-ring" style={{ animationDelay: '0.5s' }} />
+              
+              <div className="w-20 h-20 rounded-2xl bg-white border-2 border-[var(--brand-blue)]/30 flex items-center justify-center shadow-lg shadow-[var(--brand-blue)]/10">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/banner%20logo%20latest-Wy6FwAgjDavAiB9pvHR7pRWJVuZx3Z.png"
                   alt="ConglomerateIT"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 object-contain"
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 object-contain"
                 />
               </div>
             </div>
@@ -166,13 +193,18 @@ export default function Integrations() {
             {integrationNodes.map((node, i) => (
               <div
                 key={node.name}
-                className={`absolute ${node.position} integration-node w-14 h-14 flex flex-col items-center justify-center gap-1`}
-                style={{ animationDelay: node.delay }}
+                className="integration-node absolute w-14 h-14 flex flex-col items-center justify-center gap-1 z-10"
+                style={{ 
+                  left: `${node.x}%`, 
+                  top: `${node.y}%`,
+                  transform: 'translate(-50%, -50%)',
+                  animationDelay: `${i * 0.1}s`
+                }}
               >
                 <div className="text-[var(--text-secondary)]">
                   <IntegrationIcon name={node.name} />
                 </div>
-                <span className="text-[8px] text-[var(--text-muted)] font-medium">{node.name}</span>
+                <span className="text-[8px] text-[var(--text-muted)] font-medium text-center leading-tight">{node.name}</span>
               </div>
             ))}
           </div>

@@ -29,20 +29,34 @@ export default function Hero() {
   }, [displayed, deleting, wordIndex])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero pt-20">
-      {/* Subtle radial glow accents — no cards or clutter */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden section-hero pt-20">
+      {/* Subtle gradient accents */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[var(--brand-blue)]/5 blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[var(--brand-red)]/5 blur-3xl" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-[var(--brand-blue)]/5 blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full bg-[var(--brand-red)]/5 blur-[100px]" />
       </div>
+
+      {/* Grid pattern */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}
+      />
 
       {/* Main content */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--brand-blue)]/5 border border-[var(--brand-blue)]/10 mb-8 fade-in-up">
+          <span className="w-2 h-2 rounded-full bg-[var(--brand-blue)] animate-pulse" />
+          <span className="text-sm text-[var(--text-secondary)] font-medium">AI-First Enterprise Solutions</span>
+        </div>
+
         {/* Headline */}
-        <h1 className="font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight text-balance mb-6 fade-in-up">
-          <span className="text-foreground">Transform Your Business</span>
+        <h1 className="font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight text-balance mb-6 fade-in-up text-[var(--foreground)]">
+          Transform Your Business
           <br />
-          <span className="text-foreground">With Tomorrow&apos;s </span>
+          With Tomorrow&apos;s{' '}
           <span className="text-[var(--brand-blue)]">{displayed}</span>
           <span className="text-[var(--brand-blue)] cursor-blink">|</span>
         </h1>
@@ -56,7 +70,7 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in-up">
           <Link
             href="/services"
-            className="px-8 py-4 rounded-xl bg-[var(--brand-blue)] text-white font-medium text-sm hover:opacity-90 transition-opacity flex items-center gap-2"
+            className="btn-primary px-8 py-4 rounded-xl font-medium text-sm flex items-center gap-2"
           >
             Explore Services
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -65,7 +79,7 @@ export default function Hero() {
           </Link>
           <Link
             href="/contact"
-            className="px-8 py-4 rounded-xl border border-white/10 text-foreground font-medium text-sm hover:border-white/25 transition-colors"
+            className="btn-secondary px-8 py-4 rounded-xl font-medium text-sm"
           >
             Contact Us
           </Link>
