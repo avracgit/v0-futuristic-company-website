@@ -41,18 +41,16 @@ export default function Hero() {
     const LATS  = 12
     const LNGS  = 18
 
-    // 27.5° Z-axis tilt — leans the spin axis 27.5° from vertical (north pole tilts left)
+    // 27.5° Y-axis tilt — leans the north pole to the right by 27.5°
     // Applied identically to globe and orbs so they are one rigid entity
-    const TILT_Z  = (27.5 * Math.PI) / 180
-    const cosTZ   = Math.cos(TILT_Z)
-    const sinTZ   = Math.sin(TILT_Z)
-
-    // Rotate around Z axis: tilts the Y axis (north pole) to the left by 27.5°
-    function tiltX(x: number, y: number, z: number): [number, number, number] {
+    function tiltY(x: number, y: number, z: number): [number, number, number] {
+      const angle = (27.5 * Math.PI) / 180
+      const cos = Math.cos(angle)
+      const sin = Math.sin(angle)
       return [
-        x * cosTZ - y * sinTZ,
-        x * sinTZ + y * cosTZ,
-        z,
+        x * cos + z * sin,
+        y,
+        -x * sin + z * cos,
       ]
     }
 
@@ -101,7 +99,7 @@ export default function Hero() {
           const wx0 = rr * Math.sin(theta)
           const wz0 = rr * Math.cos(theta)
           const wy0 = ry
-          const [tx, ty, tz] = tiltX(wx0, wy0, wz0)
+          const [tx, ty, tz] = tiltY(wx0, wy0, wz0)
           const [px, py] = project(tx, ty, tz, cx, cy)
           pts.push({ px, py, wx: wx0, wy: wy0, tz })
         }
@@ -129,7 +127,7 @@ export default function Hero() {
           const wx0 = R * Math.sin(phi) * Math.sin(theta)
           const wy0 = R * Math.cos(phi)
           const wz0 = R * Math.sin(phi) * Math.cos(theta)
-          const [tx, ty, tz] = tiltX(wx0, wy0, wz0)
+          const [tx, ty, tz] = tiltY(wx0, wy0, wz0)
           const [px, py] = project(tx, ty, tz, cx, cy)
           pts.push({ px, py, wx: wx0, wy: wy0, tz })
         }
@@ -156,7 +154,7 @@ export default function Hero() {
           const wx0 = rr * Math.sin(theta)
           const wz0 = rr * Math.cos(theta)
           const wy0 = ry
-          const [tx, ty, tz] = tiltX(wx0, wy0, wz0)
+          const [tx, ty, tz] = tiltY(wx0, wy0, wz0)
           if (tz < -R * 0.1) continue
           const [px, py, sc] = project(tx, ty, tz, cx, cy)
           const { dot } = sphereColor(wx0, wy0, R)
@@ -188,8 +186,8 @@ export default function Hero() {
         const wy0 = -dist * Math.cos(phi)
         const wz0 =  dist * Math.sin(phi)
 
-        // Apply same X-axis tilt so orbs move with the globe
-        const [tx, ty, tz] = tiltX(-dist * Math.sin(phi), wy0, 0)
+        // Apply same Y-axis tilt so orbs move with the globe
+        const [tx, ty, tz] = tiltY(-dist * Math.sin(phi), wy0, 0)
         void tz
 
         const px = cx + tx
