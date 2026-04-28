@@ -56,7 +56,7 @@ const NODE_W = 64
 const NODE_H = 36
 
 // Each pulse has a random delay + color
-const PULSE_COLORS = ['#3b82f6', '#60a5fa', '#dc2626', '#3b82f6']
+const PULSE_COLORS = ['#009de7', '#60c8f7', '#f40000', '#009de7']
 
 export default function Integrations() {
   const [pulses, setPulses] = useState<{ id: number; nodeIdx: number; progress: number; color: string }[]>([])
@@ -100,7 +100,7 @@ export default function Integrations() {
   }, [])
 
   return (
-    <section className="section-base section-blend relative">
+    <section id="integrations" className="section-base section-blend relative">
       <div className="absolute inset-0 gradient-radial pointer-events-none" />
 
       <div className="max-w-6xl mx-auto">

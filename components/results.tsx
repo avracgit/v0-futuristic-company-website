@@ -131,7 +131,7 @@ export default function Results() {
   }
 
   return (
-    <section className="section-base section-blend relative">
+    <section id="results" className="section-base section-blend relative">
       <div className="absolute inset-0 gradient-radial pointer-events-none" />
 
       <div className="max-w-6xl mx-auto">
