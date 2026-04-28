@@ -4,25 +4,25 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Base dark blue */
-  --background: #01102a;
-  --foreground: #f0f4ff;
-  --card: #0a1a3a;
-  --card-foreground: #f0f4ff;
-  --popover: #0a1a3a;
-  --popover-foreground: #f0f4ff;
+  /* Light theme background */
+  --background: #ffffff;
+  --foreground: #0f1419;
+  --card: #f5f7fa;
+  --card-foreground: #0f1419;
+  --popover: #f5f7fa;
+  --popover-foreground: #0f1419;
   --primary: #009de7;
   --primary-foreground: #ffffff;
   --secondary: #253093;
   --secondary-foreground: #94a3b8;
-  --muted: #1e293b;
-  --muted-foreground: #64748b;
+  --muted: #e5e7eb;
+  --muted-foreground: #6b7280;
   --accent: #f40000;
   --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: rgba(0, 157, 231, 0.12);
-  --input: #1e293b;
+  --border: rgba(0, 157, 231, 0.15);
+  --input: #f5f7fa;
   --ring: #009de7;
   --radius: 0.75rem;
 
@@ -32,15 +32,15 @@
   --brand-blue-light: #60c8f7;
   --brand-red: #f40000;
   --brand-red-secondary: #fd5d5d;
-  --brand-red-glow: rgba(244, 0, 0, 0.3);
-  --brand-blue-glow: rgba(0, 157, 231, 0.3);
+  --brand-red-glow: rgba(244, 0, 0, 0.2);
+  --brand-blue-glow: rgba(0, 157, 231, 0.2);
 
-  --text-primary: #f0f4ff;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --surface-card: #0a1a3a;
-  --surface-elevated: #0f2445;
-  --surface-mid: #081830;
+  --text-primary: #0f1419;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --surface-card: #f5f7fa;
+  --surface-elevated: #ffffff;
+  --surface-mid: #fafbfc;
 }
 
 @theme inline {
