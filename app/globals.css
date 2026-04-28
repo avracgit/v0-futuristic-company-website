@@ -3,8 +3,45 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Light theme (default) */
 :root {
-  /* Unified dark navy */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #f8fafc;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #475569;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #dc2626;
+  --accent-foreground: #ffffff;
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: rgba(59, 130, 246, 0.15);
+  --input: #f1f5f9;
+  --ring: #3b82f6;
+  --radius: 0.75rem;
+
+  --brand-red: #dc2626;
+  --brand-blue: #3b82f6;
+  --brand-blue-light: #60a5fa;
+  --brand-red-glow: rgba(220, 38, 38, 0.2);
+  --brand-blue-glow: rgba(59, 130, 246, 0.2);
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --surface-card: #f8fafc;
+  --surface-elevated: #ffffff;
+  --surface-mid: #f1f5f9;
+}
+
+/* Dark theme - deep navy blue */
+html.dark {
   --background: #06091a;
   --foreground: #f0f4ff;
   --card: #0d1224;
@@ -24,7 +61,6 @@
   --border: rgba(59, 130, 246, 0.12);
   --input: #1e293b;
   --ring: #3b82f6;
-  --radius: 0.75rem;
 
   --brand-red: #dc2626;
   --brand-blue: #3b82f6;
@@ -120,10 +156,13 @@
 
 /* ─── Glass card ─────────────────────────────────────────── */
 .glass-card {
-  background: rgba(13, 18, 36, 0.85);
+  background: rgba(248, 250, 252, 0.85);
   backdrop-filter: blur(14px);
   border: 1px solid rgba(59, 130, 246, 0.13);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+html.dark .glass-card {
+  background: rgba(13, 18, 36, 0.85);
 }
 .glass-card:hover {
   border-color: rgba(59, 130, 246, 0.28);
@@ -223,7 +262,7 @@
   background-clip: text;
 }
 
-/* ─── Lively button hovers ───────────────────────────────── */
+/* ─── Lively button hovers ────────────────────────���──────── */
 .btn-primary {
   background: var(--brand-blue);
   color: #fff;

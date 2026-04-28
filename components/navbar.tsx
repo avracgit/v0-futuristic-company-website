@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { navLinks } from '@/lib/data'
+import ThemeToggle from './theme-toggle'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -55,6 +56,7 @@ export default function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
           <Link
             href="/contact"
             className="px-5 py-2.5 rounded-lg bg-[var(--brand-blue)] text-white text-sm font-medium hover:shadow-[0_0_20px_var(--brand-blue-glow)] transition-all duration-300 flex items-center gap-2"

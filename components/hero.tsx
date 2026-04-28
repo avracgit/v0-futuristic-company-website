@@ -243,7 +243,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-screen overflow-hidden gradient-hero pt-20">
+    <section id="hero" className="relative min-h-screen overflow-hidden gradient-hero pt-20">
       <div className="absolute inset-0 z-0" aria-hidden="true">
         <canvas ref={canvasRef} className="w-full h-full" />
       </div>
