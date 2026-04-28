@@ -270,6 +270,26 @@ html.dark .glass-bar {
 }
 .marquee-track:hover { animation-play-state: paused; }
 
+/* ─── Clients horizontal scroll ─────────────────────────── */
+@keyframes scrollFwd {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes scrollRev {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.clients-track-fwd {
+  animation: scrollFwd 32s linear infinite;
+}
+.clients-track-rev {
+  animation: scrollRev 36s linear infinite;
+}
+.clients-track-fwd:hover,
+.clients-track-rev:hover {
+  animation-play-state: paused;
+}
+
 /* ─── Badge helpers ──────────────────────────────────────── */
 .badge-blue {
   background: rgba(59, 130, 246, 0.1);

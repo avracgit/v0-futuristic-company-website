@@ -1,6 +1,7 @@
 import Navbar from '@/components/navbar'
 import Hero from '@/components/hero'
 import Stats from '@/components/stats'
+import Clients from '@/components/clients'
 import Results from '@/components/results'
 import Features from '@/components/features'
 import Integrations from '@/components/integrations'
@@ -16,6 +17,7 @@ export default function Home() {
       <SectionNav />
       <Hero />
       <Stats />
+      <Clients />
       <Results />
       <Features />
       <Integrations />
