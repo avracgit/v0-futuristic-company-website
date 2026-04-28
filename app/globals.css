@@ -45,24 +45,24 @@
 
 /* Dark theme */
 html.dark {
-  --background: #01102a;
-  --foreground: #f0f4ff;
-  --card: #0a1a3a;
-  --card-foreground: #f0f4ff;
-  --popover: #0a1a3a;
-  --popover-foreground: #f0f4ff;
+  --background: #000c1f;
+  --foreground: #e8f0fe;
+  --card: #040f24;
+  --card-foreground: #e8f0fe;
+  --popover: #040f24;
+  --popover-foreground: #e8f0fe;
   --primary: #009de7;
   --primary-foreground: #ffffff;
   --secondary: #253093;
   --secondary-foreground: #94a3b8;
-  --muted: #1e293b;
-  --muted-foreground: #64748b;
+  --muted: #0d1f3c;
+  --muted-foreground: #5a7099;
   --accent: #f40000;
   --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: rgba(0, 157, 231, 0.12);
-  --input: #1e293b;
+  --border: rgba(0, 157, 231, 0.10);
+  --input: #0d1f3c;
   --ring: #009de7;
 
   --brand-blue: #009de7;
@@ -73,12 +73,12 @@ html.dark {
   --brand-red-glow: rgba(244, 0, 0, 0.3);
   --brand-blue-glow: rgba(0, 157, 231, 0.3);
 
-  --text-primary: #f0f4ff;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --surface-card: #0a1a3a;
-  --surface-elevated: #0f2445;
-  --surface-mid: #081830;
+  --text-primary: #e8f0fe;
+  --text-secondary: #7a9abe;
+  --text-muted: #4a6a8a;
+  --surface-card: #040f24;
+  --surface-elevated: #071428;
+  --surface-mid: #020a18;
 }
 
 @theme inline {
@@ -161,21 +161,22 @@ html.dark {
 
 /* ─── Glass card ─────────────────────────────────────────── */
 .glass-card {
-  background: rgba(10, 26, 58, 0.85);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(0, 157, 231, 0.13);
+  background: rgba(4, 15, 36, 0.72);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border: 1px solid rgba(0, 157, 231, 0.12);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 html.dark .glass-card {
-  background: rgba(10, 26, 58, 0.85);
+  background: rgba(4, 15, 36, 0.72);
 }
 html:not(.dark) .glass-card {
-  background: rgba(245, 247, 250, 0.85);
-  border-color: rgba(0, 157, 231, 0.15);
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(0, 157, 231, 0.18);
 }
 .glass-card:hover {
-  border-color: rgba(0, 157, 231, 0.28);
-  box-shadow: 0 0 32px rgba(0, 157, 231, 0.08);
+  border-color: rgba(0, 157, 231, 0.30);
+  box-shadow: 0 8px 40px rgba(0, 157, 231, 0.10);
 }
 
 /* ─── Integration node ───────────────────────────────────── */
@@ -323,20 +324,20 @@ html:not(.dark) .btn-ghost:hover {
 /* ─── Section Nav (left sidebar) ─────────────────────────── */
 .section-nav {
   position: fixed;
-  left: 1.5rem;
+  left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 50;
+  z-index: 40;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.625rem;
 }
 .section-nav-dot {
-  width: 10px;
-  height: 10px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.3s ease;
   cursor: pointer;
 }
