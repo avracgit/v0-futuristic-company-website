@@ -41,17 +41,18 @@ export default function Hero() {
     const LATS  = 12
     const LNGS  = 18
 
-    // 27.5° X-axis tilt — applied to globe AND orbs so they move as one entity
-    const TILT_X = (27.5 * Math.PI) / 180
-    const cosTX  = Math.cos(TILT_X)
-    const sinTX  = Math.sin(TILT_X)
+    // 27.5° Z-axis tilt — leans the spin axis 27.5° from vertical (north pole tilts left)
+    // Applied identically to globe and orbs so they are one rigid entity
+    const TILT_Z  = (27.5 * Math.PI) / 180
+    const cosTZ   = Math.cos(TILT_Z)
+    const sinTZ   = Math.sin(TILT_Z)
 
-    // Apply X-axis rotation: tilts the top of the sphere away from the viewer
+    // Rotate around Z axis: tilts the Y axis (north pole) to the left by 27.5°
     function tiltX(x: number, y: number, z: number): [number, number, number] {
       return [
-        x,
-        y * cosTX - z * sinTX,
-        y * sinTX + z * cosTX,
+        x * cosTZ - y * sinTZ,
+        x * sinTZ + y * cosTZ,
+        z,
       ]
     }
 
