@@ -24,25 +24,25 @@ const H = 560
 const CX = W / 2
 const CY = H / 2
 
-// Fixed node positions arranged in two columns on each side (left 3×2, right 3×2, top 2, bottom 2)
+// Fixed node positions — spaced wider to accommodate larger NODE_W/NODE_H
 const nodePositions: { x: number; y: number }[] = [
   // Left column (outer)
-  { x: 60,  y: 120 },
-  { x: 60,  y: 280 },
-  { x: 60,  y: 440 },
+  { x: 20,  y: 100 },
+  { x: 20,  y: 260 },
+  { x: 20,  y: 420 },
   // Left column (inner)
-  { x: 210, y: 160 },
-  { x: 210, y: 400 },
+  { x: 170, y: 150 },
+  { x: 170, y: 380 },
   // Top
-  { x: 390, y: 60  },
-  { x: 510, y: 60  },
+  { x: 370, y: 30  },
+  { x: 490, y: 30  },
   // Right column (inner)
-  { x: 690, y: 160 },
-  { x: 690, y: 400 },
+  { x: 680, y: 150 },
+  { x: 680, y: 380 },
   // Right column (outer)
-  { x: 840, y: 120 },
-  { x: 840, y: 280 },
-  { x: 840, y: 440 },
+  { x: 824, y: 100 },
+  { x: 824, y: 260 },
+  { x: 824, y: 420 },
 ]
 
 // Build an orthogonal PCB path from node to center
@@ -52,8 +52,8 @@ function buildPath(nx: number, ny: number): string {
   return `M ${nx} ${ny} L ${midX} ${ny} L ${midX} ${CY} L ${CX} ${CY}`
 }
 
-const NODE_W = 64
-const NODE_H = 36
+const NODE_W = 96
+const NODE_H = 54
 
 // Each pulse has a random delay + color
 const PULSE_COLORS = ['#3b82f6', '#60a5fa', '#dc2626', '#3b82f6']
@@ -266,29 +266,29 @@ export default function Integrations() {
                     y={pos.y}
                     width={NODE_W}
                     height={NODE_H}
-                    rx="8"
+                    rx="10"
                     fill="#0d1224"
-                    stroke="rgba(255,255,255,0.10)"
-                    strokeWidth="1"
+                    stroke="rgba(255,255,255,0.12)"
+                    strokeWidth="1.2"
                   />
                   {/* Color accent bar on top */}
                   <rect
-                    x={pos.x + 8}
-                    y={pos.y + 3}
-                    width={NODE_W - 16}
-                    height="2"
-                    rx="1"
+                    x={pos.x + 10}
+                    y={pos.y + 4}
+                    width={NODE_W - 20}
+                    height="3"
+                    rx="1.5"
                     fill={p.color}
-                    opacity="0.7"
+                    opacity="0.8"
                   />
                   {/* Abbr */}
                   <text
                     x={pos.x + NODE_W / 2}
-                    y={pos.y + NODE_H / 2 - 3}
+                    y={pos.y + NODE_H / 2 - 4}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill={p.color}
-                    fontSize="9"
+                    fontSize="13"
                     fontWeight="700"
                     fontFamily="monospace"
                   >
@@ -297,11 +297,11 @@ export default function Integrations() {
                   {/* Name */}
                   <text
                     x={pos.x + NODE_W / 2}
-                    y={pos.y + NODE_H / 2 + 9}
+                    y={pos.y + NODE_H / 2 + 12}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill="rgba(148,163,184,0.85)"
-                    fontSize="6.5"
+                    fill="rgba(148,163,184,0.90)"
+                    fontSize="9.5"
                     fontFamily="sans-serif"
                   >
                     {p.name}
