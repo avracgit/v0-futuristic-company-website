@@ -32,13 +32,14 @@ export default function Hero() {
     ro.observe(canvas.parentElement!)
 
     // ── floating orbs ───────────────────────────────────────
+    // Positioned on the left perimeter of the globe, ascending in size (bottom to top)
     const orbs: Orb[] = [
-      { x: -200, y: -160, z: 0, r: 14, color: '#dc2626', vx:  0.11, vy:  0.06 },
-      { x: -240, y:   50, z: 0, r: 10, color: '#3b82f6', vx: -0.08, vy:  0.10 },
-      { x:  220, y: -110, z: 0, r:  8, color: '#dc2626', vx:  0.12, vy: -0.08 },
-      { x:  200, y:  180, z: 0, r: 12, color: '#3b82f6', vx: -0.09, vy: -0.07 },
-      { x:   50, y:  220, z: 0, r:  9, color: '#3b82f6', vx:  0.07, vy:  0.11 },
-      { x:  240, y:   70, z: 0, r:  7, color: '#dc2626', vx: -0.10, vy:  0.05 },
+      { x: -200, y:  180, z: 0, r:  4, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -220, y:  100, z: 0, r:  6, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -240, y:   20, z: 0, r:  8, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -250, y:  -60, z: 0, r: 10, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -260, y: -140, z: 0, r: 12, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -270, y: -200, z: 0, r: 14, color: '#dc2626', vx: 0, vy: 0 },
     ]
 
     // ── constants ───────────────────────────────────────────
@@ -165,13 +166,11 @@ export default function Hero() {
       const cy = H * 0.50
 
       for (const orb of orbs) {
-        orb.x += orb.vx
-        orb.y += orb.vy
-        if (Math.abs(orb.x) > W * 0.48) orb.vx *= -1
-        if (Math.abs(orb.y) > H * 0.48) orb.vy *= -1
-
+        // Static positioning — no animation
         const [px, py] = project(orb.x, orb.y, orb.z, cx, cy)
         const base = orb.color === '#dc2626' ? '220,38,38' : '59,130,246'
+        
+        // Glow halo
         const grd  = ctx.createRadialGradient(px, py, 0, px, py, orb.r * 3.2)
         grd.addColorStop(0,   `rgba(${base},0.50)`)
         grd.addColorStop(0.4, `rgba(${base},0.18)`)
@@ -181,6 +180,7 @@ export default function Hero() {
         ctx.fillStyle = grd
         ctx.fill()
 
+        // Solid core
         ctx.beginPath()
         ctx.arc(px, py, orb.r, 0, Math.PI * 2)
         ctx.fillStyle = orb.color
