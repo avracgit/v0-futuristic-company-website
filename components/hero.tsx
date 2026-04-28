@@ -32,14 +32,15 @@ export default function Hero() {
     ro.observe(canvas.parentElement!)
 
     // ── floating orbs ───────────────────────────────────────
-    // Positioned on the left perimeter of the globe, ascending in size (bottom to top)
+    // Circular pattern around globe: south pole (bottom) to north pole (top), ascending in size
     const orbs: Orb[] = [
-      { x: -200, y:  180, z: 0, r:  4, color: '#3b82f6', vx: 0, vy: 0 },
-      { x: -220, y:  100, z: 0, r:  6, color: '#3b82f6', vx: 0, vy: 0 },
-      { x: -240, y:   20, z: 0, r:  8, color: '#3b82f6', vx: 0, vy: 0 },
-      { x: -250, y:  -60, z: 0, r: 10, color: '#3b82f6', vx: 0, vy: 0 },
-      { x: -260, y: -140, z: 0, r: 12, color: '#3b82f6', vx: 0, vy: 0 },
-      { x: -270, y: -200, z: 0, r: 14, color: '#dc2626', vx: 0, vy: 0 },
+      { x: -220, y:  210, z: 0, r:  4, color: '#3b82f6', vx: 0, vy: 0 }, // south pole
+      { x: -240, y:  150, z: 0, r:  6, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -250, y:   80, z: 0, r:  7, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -255, y:    0, z: 0, r:  8, color: '#3b82f6', vx: 0, vy: 0 }, // equator
+      { x: -250, y:  -80, z: 0, r:  9, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -240, y: -150, z: 0, r: 11, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -220, y: -210, z: 0, r: 13, color: '#dc2626', vx: 0, vy: 0 }, // north pole
     ]
 
     // ── constants ───────────────────────────────────────────
@@ -75,8 +76,8 @@ export default function Hero() {
     function drawGlobe(rot: number) {
       const W = canvas.width
       const H = canvas.height
-      // Globe sits right-of-center, slightly above mid
-      const cx = W * 0.63
+      // Globe sits far right, centered vertically
+      const cx = W * 0.72
       const cy = H * 0.50
       const R  = Math.min(H * 0.28, 190)
 
@@ -162,7 +163,7 @@ export default function Hero() {
     function drawOrbs() {
       const W = canvas.width
       const H = canvas.height
-      const cx = W * 0.63
+      const cx = W * 0.72
       const cy = H * 0.50
 
       for (const orb of orbs) {
@@ -252,13 +253,13 @@ export default function Hero() {
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-[var(--background)] pointer-events-none z-10" />
 
       {/* Text — left column */}
-      <div className="relative z-10 min-h-screen flex items-center px-8 md:px-16 lg:px-24 pointer-events-none">
-        <div className="max-w-sm lg:max-w-md fade-in-up pointer-events-auto">
-          <p className="text-xs font-semibold tracking-widest uppercase text-[var(--text-muted)] mb-6">
+      <div className="relative z-10 min-h-screen flex items-center px-8 md:px-16 lg:px-20 pointer-events-none">
+        <div className="max-w-lg lg:max-w-xl fade-in-up pointer-events-auto">
+          <p className="text-xs font-semibold tracking-widest uppercase text-[var(--text-muted)] mb-8">
             Trusted in 30+ countries
           </p>
 
-          <h1 className="font-semibold text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-balance mb-6">
+          <h1 className="font-semibold text-5xl md:text-6xl lg:text-7xl leading-[1.2] tracking-tight text-balance mb-8">
             <span className="text-[var(--brand-red)]">Connected.</span>
             <br />
             <span className="text-[var(--brand-blue)]">Global.</span>
@@ -266,7 +267,7 @@ export default function Hero() {
             <span className="text-foreground">Limitless.</span>
           </h1>
 
-          <p className="text-[var(--text-secondary)] text-base md:text-lg leading-relaxed mb-10 max-w-xs">
+          <p className="text-[var(--text-secondary)] text-lg md:text-xl leading-8 mb-12 max-w-md">
             Empowering businesses across borders with intelligence and innovation across every industry vertical.
           </p>
 
@@ -282,7 +283,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="mt-16">
+          <div className="mt-20">
             <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
               <svg className="w-4 h-4 text-[var(--brand-blue)] scroll-indicator" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
