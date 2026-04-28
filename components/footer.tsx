@@ -58,7 +58,7 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto relative">
         {/* CTA Band */}
-        <div className="rounded-2xl p-10 mb-20 text-center relative overflow-hidden bg-gradient-to-br from-[var(--brand-blue)]/10 to-[var(--brand-red)]/5 border border-[var(--brand-blue)]/20">
+        <div className="glass-panel rounded-2xl p-10 mb-20 text-center relative overflow-hidden border-[var(--brand-blue)]/20">
           <h3 className="font-semibold text-3xl md:text-4xl text-foreground mb-4 text-balance">
             Ready to Transform Your <span className="text-[var(--brand-blue)]">Enterprise?</span>
           </h3>

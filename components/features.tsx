@@ -93,7 +93,7 @@ export default function Features() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Badge */}
         <div className="mb-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-blue text-xs font-medium">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-badge badge-blue text-xs font-medium">
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
@@ -115,10 +115,10 @@ export default function Features() {
                 <button
                   key={f.id}
                   onClick={() => setActiveId(f.id)}
-                  className={`w-full text-left p-5 rounded-xl border transition-all duration-200 ${
+                  className={`w-full text-left p-5 rounded-xl border transition-all duration-300 backdrop-blur-md ${
                     activeId === f.id
-                      ? 'border-[var(--brand-blue)] bg-[var(--brand-blue)]/8 shadow-md shadow-blue-500/10'
-                      : 'border-white/8 hover:border-white/20 hover:bg-white/4'
+                      ? 'border-[var(--brand-blue)]/50 bg-[var(--brand-blue)]/10 shadow-lg shadow-blue-500/15 backdrop-blur-xl'
+                      : 'border-white/10 hover:border-[var(--brand-blue)]/30 hover:bg-white/5 glass-card'
                   }`}
                 >
                   <div className="flex items-start gap-4">

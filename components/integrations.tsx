@@ -105,7 +105,7 @@ export default function Integrations() {
 
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <span className="badge-blue text-xs font-medium px-3 py-1 rounded-full inline-block mb-4">Integrations</span>
+          <span className="glass-badge badge-blue text-xs font-medium px-3 py-1.5 rounded-full inline-block mb-4">Integrations</span>
           <h2 className="font-semibold text-3xl md:text-4xl lg:text-5xl text-foreground text-balance leading-tight">
             ConglomerateIT Connects You
             <br />

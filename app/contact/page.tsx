@@ -51,7 +51,7 @@ export default function ContactPage() {
       {/* Hero */}
       <section className="pt-32 pb-16 px-6 gradient-hero">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-blue mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-badge badge-blue mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--brand-blue)]" />
             <span className="text-xs font-medium">Contact Us</span>
           </div>
@@ -100,7 +100,7 @@ export default function ContactPage() {
                           required
                           value={formData.name}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 rounded-xl bg-[var(--surface-elevated)] border border-white/10 text-foreground placeholder:text-[var(--text-muted)] text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors"
+                          className="w-full px-4 py-3 rounded-xl glass-input text-foreground placeholder:text-[var(--text-muted)] text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors"
                           placeholder="John Doe"
                         />
                       </div>
@@ -115,7 +115,7 @@ export default function ContactPage() {
                           required
                           value={formData.email}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 rounded-xl bg-[var(--surface-elevated)] border border-white/10 text-foreground placeholder:text-[var(--text-muted)] text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors"
+                          className="w-full px-4 py-3 rounded-xl glass-input text-foreground placeholder:text-[var(--text-muted)] text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors"
                           placeholder="john@company.com"
                         />
                       </div>
@@ -131,7 +131,7 @@ export default function ContactPage() {
                         name="company"
                         value={formData.company}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-[var(--surface-elevated)] border border-white/10 text-foreground placeholder:text-[var(--text-muted)] text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors"
+                        className="w-full px-4 py-3 rounded-xl glass-input text-foreground placeholder:text-[var(--text-muted)] text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors"
                         placeholder="Your Company Inc."
                       />
                     </div>
@@ -145,7 +145,7 @@ export default function ContactPage() {
                         name="service"
                         value={formData.service}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-[var(--surface-elevated)] border border-white/10 text-foreground text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors"
+                        className="w-full px-4 py-3 rounded-xl glass-input text-foreground text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors"
                       >
                         <option value="">Select a service</option>
                         {services.map((service) => (
@@ -168,7 +168,7 @@ export default function ContactPage() {
                         rows={5}
                         value={formData.message}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-[var(--surface-elevated)] border border-white/10 text-foreground placeholder:text-[var(--text-muted)] text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors resize-none"
+                        className="w-full px-4 py-3 rounded-xl glass-input text-foreground placeholder:text-[var(--text-muted)] text-sm focus:outline-none focus:border-[var(--brand-blue)] transition-colors resize-none"
                         placeholder="Tell us about your project requirements..."
                       />
                     </div>
@@ -198,7 +198,7 @@ export default function ContactPage() {
               <div className="space-y-4 mb-10">
                 <a
                   href="mailto:info@conglomerateit.com"
-                  className="flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-[var(--brand-blue)]/30 transition-colors group"
+                  className="flex items-center gap-4 p-4 rounded-xl glass-card hover:border-[var(--brand-blue)]/30 transition-all group"
                 >
                   <div className="w-12 h-12 rounded-xl bg-[var(--brand-blue)]/10 flex items-center justify-center text-[var(--brand-blue)]">
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -215,7 +215,7 @@ export default function ContactPage() {
                   href="https://conglomerateit.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-[var(--brand-blue)]/30 transition-colors group"
+                  className="flex items-center gap-4 p-4 rounded-xl glass-card hover:border-[var(--brand-blue)]/30 transition-all group"
                 >
                   <div className="w-12 h-12 rounded-xl bg-[var(--brand-blue)]/10 flex items-center justify-center text-[var(--brand-blue)]">
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -233,7 +233,7 @@ export default function ContactPage() {
               <h3 className="font-semibold text-lg text-foreground mb-4">Our Offices</h3>
               <div className="space-y-4">
                 {offices.map((office, i) => (
-                  <div key={i} className="p-4 rounded-xl border border-white/10">
+                  <div key={i} className="p-4 rounded-xl glass-card">
                     <h4 className="font-medium text-foreground mb-1">{office.city}</h4>
                     <p className="text-sm text-[var(--text-muted)] mb-2">{office.address}</p>
                     <p className="text-sm text-[var(--brand-blue)]">{office.email}</p>

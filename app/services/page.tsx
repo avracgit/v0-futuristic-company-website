@@ -50,7 +50,7 @@ export default function ServicesPage() {
       {/* Hero */}
       <section className="pt-32 pb-20 px-6 gradient-hero">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-blue mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-badge badge-blue mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--brand-blue)]" />
             <span className="text-xs font-medium">Our Services</span>
           </div>
@@ -133,7 +133,7 @@ export default function ServicesPage() {
 
       {/* CTA Section */}
       <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto glass-panel rounded-2xl p-12 text-center">
           <h2 className="font-semibold text-3xl md:text-4xl text-foreground mb-6">
             Ready to Get Started?
           </h2>
@@ -149,7 +149,7 @@ export default function ServicesPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
-        </div>
+          </div>
       </section>
 
       <Footer />

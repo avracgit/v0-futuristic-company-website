@@ -71,21 +71,19 @@ export default function Chatbot() {
 
       {/* Chat window */}
       <div
-        className={`fixed bottom-24 right-6 z-50 w-80 sm:w-96 rounded-2xl overflow-hidden transition-all duration-400 ${
+        className={`fixed bottom-24 right-6 z-50 w-80 sm:w-96 rounded-2xl overflow-hidden transition-all duration-400 glass-panel ${
           open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
         style={{
-          background: '#0a0d1a',
-          border: '1px solid rgba(0, 212, 255, 0.2)',
-          boxShadow: '0 0 40px rgba(0, 212, 255, 0.1), 0 20px 60px rgba(0,0,0,0.6)',
+          boxShadow: '0 0 60px rgba(59, 130, 246, 0.15), 0 25px 70px rgba(0,0,0,0.5)',
         }}
       >
         {/* Header */}
         <div
-          className="px-5 py-4 flex items-center gap-3"
+          className="px-5 py-4 flex items-center gap-3 backdrop-blur-xl"
           style={{
-            background: 'linear-gradient(90deg, rgba(0,212,255,0.1), rgba(124,58,237,0.1))',
-            borderBottom: '1px solid rgba(0,212,255,0.15)',
+            background: 'linear-gradient(90deg, rgba(59,130,246,0.08), rgba(59,130,246,0.04))',
+            borderBottom: '1px solid rgba(59,130,246,0.15)',
           }}
         >
           <div className="relative">
@@ -116,8 +114,8 @@ export default function Chatbot() {
                 }`}
                 style={
                   msg.from === 'user'
-                    ? { background: 'linear-gradient(135deg, #00d4ff, #0066ff)' }
-                    : { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(0,212,255,0.12)' }
+                    ? { background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)' }
+                    : { background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(59,130,246,0.15)', backdropFilter: 'blur(8px)' }
                 }
               >
                 {msg.text}

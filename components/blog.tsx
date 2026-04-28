@@ -95,9 +95,9 @@ export default function Blog() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-16">
           <div>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(0,212,255,0.3)] bg-[rgba(0,212,255,0.05)] mb-6">
-              <span className="w-2 h-2 rounded-full bg-[var(--neon-cyan)] pulse-glow" />
-              <span className="font-mono text-xs text-[var(--neon-cyan)] tracking-widest uppercase">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-badge badge-blue mb-6">
+              <span className="w-2 h-2 rounded-full bg-[var(--brand-blue)]" />
+              <span className="font-mono text-xs text-[var(--brand-blue)] tracking-widest uppercase">
                 Insights
               </span>
             </div>
@@ -127,7 +127,7 @@ export default function Blog() {
               href={post.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="glow-card rounded-2xl overflow-hidden group block fade-in-up"
+              className="glass-card rounded-2xl overflow-hidden group block fade-in-up hover:scale-[1.02] transition-transform duration-300"
               style={{ animationDelay: `${i * 0.1}s` }}
             >
               {/* Image area */}
@@ -154,8 +154,8 @@ export default function Blog() {
                   </div>
                 )}
                 {/* Date badge */}
-                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#03040a]/80 border border-[rgba(0,212,255,0.2)]">
-                  <span className="font-mono text-[10px] text-[var(--neon-cyan)]">{formatDate(post.date)}</span>
+                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full glass-badge">
+                  <span className="font-mono text-[10px] text-[var(--brand-blue)]">{formatDate(post.date)}</span>
                 </div>
               </div>
 

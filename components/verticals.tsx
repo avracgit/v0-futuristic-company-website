@@ -113,9 +113,9 @@ export default function Verticals() {
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(124,58,237,0.3)] bg-[rgba(124,58,237,0.05)] mb-6">
-            <span className="w-2 h-2 rounded-full bg-[var(--neon-violet)] pulse-glow" />
-            <span className="font-mono text-xs text-[var(--neon-violet)] tracking-widest uppercase">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-badge border-[var(--brand-blue)]/30 mb-6">
+            <span className="w-2 h-2 rounded-full bg-[var(--brand-blue)]" />
+            <span className="font-mono text-xs text-[var(--brand-blue)] tracking-widest uppercase">
               Our Verticals
             </span>
           </div>
@@ -136,7 +136,7 @@ export default function Verticals() {
               key={v.id}
               onMouseEnter={() => setActive(v.id)}
               onMouseLeave={() => setActive(null)}
-              className="glow-card rounded-2xl p-7 cursor-default group fade-in-up"
+              className="glass-card rounded-2xl p-7 cursor-default group fade-in-up"
               style={{
                 animationDelay: `${i * 0.1}s`,
                 boxShadow: active === v.id ? `0 0 40px ${v.glow}, 0 0 80px ${v.glow}` : undefined,

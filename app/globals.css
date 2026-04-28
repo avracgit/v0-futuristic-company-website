@@ -156,17 +156,113 @@ html.dark {
 
 /* ─── Glass card ─────────────────────────────────────────── */
 .glass-card {
-  background: rgba(248, 250, 252, 0.85);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(59, 130, 246, 0.13);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background: rgba(248, 250, 252, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 html.dark .glass-card {
-  background: rgba(13, 18, 36, 0.85);
+  background: rgba(13, 18, 36, 0.70);
 }
 .glass-card:hover {
-  border-color: rgba(59, 130, 246, 0.28);
-  box-shadow: 0 0 32px rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 8px 40px rgba(59, 130, 246, 0.12);
+}
+
+/* ─── Glass panel (larger surfaces) ─────────────────────── */
+.glass-panel {
+  background: rgba(248, 250, 252, 0.50);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(59, 130, 246, 0.10);
+}
+html.dark .glass-panel {
+  background: rgba(13, 18, 36, 0.60);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+}
+
+/* ─── Glass badge ────────────────────────────────────────── */
+.glass-badge {
+  background: rgba(248, 250, 252, 0.50);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(59, 130, 246, 0.20);
+}
+html.dark .glass-badge {
+  background: rgba(13, 18, 36, 0.60);
+}
+
+/* ─── Glass button ───────────────────────────────────────── */
+.glass-button {
+  background: rgba(248, 250, 252, 0.40);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+html.dark .glass-button {
+  background: rgba(255, 255, 255, 0.08);
+}
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(59, 130, 246, 0.30);
+}
+
+/* ─── Glass nav ──────────────────────────────────────────── */
+.glass-nav {
+  background: rgba(248, 250, 252, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.08);
+}
+html.dark .glass-nav {
+  background: rgba(10, 15, 28, 0.85);
+}
+
+/* ─── Glass stat card ────────────────────────────────────── */
+.glass-stat {
+  background: rgba(248, 250, 252, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+html.dark .glass-stat {
+  background: rgba(13, 18, 36, 0.55);
+}
+.glass-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+/* ─── Glass input ────────────────────────────────────────── */
+.glass-input {
+  background: rgba(248, 250, 252, 0.40);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  transition: all 0.2s ease;
+}
+html.dark .glass-input {
+  background: rgba(13, 18, 36, 0.50);
+}
+.glass-input:focus {
+  border-color: rgba(59, 130, 246, 0.40);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
+}
+
+/* ─── Glass overlay ──────────────────────────────────────── */
+.glass-overlay {
+  background: rgba(248, 250, 252, 0.30);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+html.dark .glass-overlay {
+  background: rgba(6, 9, 26, 0.40);
 }
 
 /* ─── Integration node ───────────────────────────────────── */

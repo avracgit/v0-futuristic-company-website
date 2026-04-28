@@ -20,9 +20,9 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-[#0a0f1c]/95 backdrop-blur-xl border-b border-[rgba(59,130,246,0.1)]'
+          ? 'glass-nav shadow-lg shadow-black/5'
           : 'bg-transparent'
       }`}
     >
@@ -90,7 +90,7 @@ export default function Navbar() {
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
           menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        } bg-[#0a0f1c]/98 backdrop-blur-xl border-b border-[rgba(59,130,246,0.1)]`}
+        } glass-nav`}
       >
         <div className="px-6 py-4 flex flex-col gap-2">
           {navLinks.map((link) => (
