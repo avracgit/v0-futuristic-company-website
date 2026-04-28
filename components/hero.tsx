@@ -3,11 +3,6 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 
-interface Orb {
-  x: number; y: number; z: number
-  r: number; color: string
-  vx: number; vy: number
-}
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -32,15 +27,14 @@ export default function Hero() {
     ro.observe(canvas.parentElement!)
 
     // ── floating orbs ───────────────────────────────────────
-    // Circular pattern around globe: south pole (bottom) to north pole (top), ascending in size
-    const orbs: Orb[] = [
-      { x: -220, y:  210, z: 0, r:  4, color: '#3b82f6', vx: 0, vy: 0 }, // south pole
-      { x: -240, y:  150, z: 0, r:  6, color: '#3b82f6', vx: 0, vy: 0 },
-      { x: -250, y:   80, z: 0, r:  7, color: '#3b82f6', vx: 0, vy: 0 },
-      { x: -255, y:    0, z: 0, r:  8, color: '#3b82f6', vx: 0, vy: 0 }, // equator
-      { x: -250, y:  -80, z: 0, r:  9, color: '#3b82f6', vx: 0, vy: 0 },
-      { x: -240, y: -150, z: 0, r: 11, color: '#3b82f6', vx: 0, vy: 0 },
-      { x: -220, y: -210, z: 0, r: 13, color: '#dc2626', vx: 0, vy: 0 }, // north pole
+    // Defined as normalized angles (0 = south pole, 1 = north pole) along the left perimeter
+    // Actual pixel positions are computed in drawOrbs() based on current R
+    const orbDefs = [
+      { t: 0.15, r:  5, color: '#3b82f6' }, // lower-left, smallest
+      { t: 0.35, r:  7, color: '#3b82f6' },
+      { t: 0.55, r:  9, color: '#3b82f6' },
+      { t: 0.75, r: 11, color: '#3b82f6' }, // upper-left, larger
+      { t: 0.92, r:  8, color: '#dc2626' }, // just above north pole, red
     ]
 
     // ── constants ───────────────────────────────────────────
@@ -161,23 +155,38 @@ export default function Hero() {
     }
 
     function drawOrbs() {
-      const W = canvas.width
-      const H = canvas.height
+      const W  = canvas.width
+      const H  = canvas.height
       const cx = W * 0.72
       const cy = H * 0.50
+      const R  = Math.min(H * 0.28, 190)
+      // Gap between globe surface and dot center (in px)
+      const GAP = 14
 
-      for (const orb of orbs) {
-        // Static positioning — no animation
-        const [px, py] = project(orb.x, orb.y, orb.z, cx, cy)
+      for (const orb of orbDefs) {
+        // t=0 → south pole (angle=PI), t=1 → north pole (angle=0)
+        // We place dots on the LEFT side of the globe: angle measured from top going left
+        // phi: 0=north, PI=south along left perimeter (x negative)
+        const phi = (1 - orb.t) * Math.PI  // t=0 → phi=PI (south), t=1 → phi=0 (north)
+        const dist = R + GAP + orb.r
+
+        // Left side of globe: x is negative (leftmost point of sphere)
+        // We arc from bottom-left to top-left across the perimeter
+        const worldX = -dist * Math.sin(phi)
+        const worldY = -dist * Math.cos(phi)  // negative y = up in canvas coords
+
+        const px = cx + worldX
+        const py = cy + worldY
+
         const base = orb.color === '#dc2626' ? '220,38,38' : '59,130,246'
-        
-        // Glow halo
-        const grd  = ctx.createRadialGradient(px, py, 0, px, py, orb.r * 3.2)
-        grd.addColorStop(0,   `rgba(${base},0.50)`)
-        grd.addColorStop(0.4, `rgba(${base},0.18)`)
+
+        // Soft glow halo
+        const grd = ctx.createRadialGradient(px, py, 0, px, py, orb.r * 2.8)
+        grd.addColorStop(0,   `rgba(${base},0.45)`)
+        grd.addColorStop(0.5, `rgba(${base},0.12)`)
         grd.addColorStop(1,   `rgba(${base},0)`)
         ctx.beginPath()
-        ctx.arc(px, py, orb.r * 3.2, 0, Math.PI * 2)
+        ctx.arc(px, py, orb.r * 2.8, 0, Math.PI * 2)
         ctx.fillStyle = grd
         ctx.fill()
 
