@@ -25,207 +25,229 @@ export default function Hero() {
     const ro = new ResizeObserver(setSize)
     ro.observe(canvas.parentElement!)
 
-    const LATS  = 12
-    const LNGS  = 18
-    // 25-degree Y-axis tilt
-    const TILT  = (25 * Math.PI) / 180
-    const sinT = Math.sin(TILT)
-    const cosT = Math.cos(TILT)
+    const LATS  = 14   // more rings for density
+    const LNGS  = 20   // more meridians
+    const STEPS_LAT = 120
+    const STEPS_MER = 80
 
-    // Floating spheres (like in reference image)
+    // Y-axis tilt (25 deg) — rotates around the Y axis (left/right lean)
+    const TILT_Y = (25 * Math.PI) / 180
+    const sinTY = Math.sin(TILT_Y)
+    const cosTY = Math.cos(TILT_Y)
+
+    // Floating orbs matching reference exactly
     const orbs = [
-      { ox: -0.55, oy: -0.72, r: 18, color: '#f40000', speed: 0.0003 },
-      { ox: -1.10, oy: -0.30, r: 14, color: '#009de7', speed: 0.0004 },
-      { ox:  0.85, oy: -0.55, r: 10, color: '#fd5d5d', speed: 0.0005 },
-      { ox:  0.90, oy:  0.55, r:  9, color: '#f40000', speed: 0.0004 },
-      { ox: -0.40, oy:  0.80, r: 16, color: '#009de7', speed: 0.0003 },
-      { ox:  0.55, oy:  0.85, r: 12, color: '#009de7', speed: 0.0006 },
+      { ox: -0.30, oy: -1.10, r: 22, col: '#f40000' }, // large red top
+      { ox: -1.30, oy: -0.25, r: 16, col: '#009de7' }, // large blue left
+      { ox:  1.10, oy: -0.60, r: 11, col: '#fd5d5d' }, // small red right
+      { ox:  1.20, oy:  0.50, r:  9, col: '#f40000' }, // tiny red lower-right
+      { ox: -0.20, oy:  1.20, r: 18, col: '#009de7' }, // medium blue bottom
+      { ox:  0.70, oy:  1.10, r: 13, col: '#253093' }, // blue bottom-right
     ]
 
-    function applyTilt(wx: number, wy: number, wz: number): [number, number, number] {
-      const tx = wx * cosT + wz * sinT
-      const tz = -wx * sinT + wz * cosT
-      return [tx, wy, tz]
+    // Tilt around Y axis
+    function tilt(wx: number, wy: number, wz: number): [number, number, number] {
+      return [wx * cosTY + wz * sinTY, wy, -wx * sinTY + wz * cosTY]
     }
 
+    // Simple perspective projection
     function project(x: number, y: number, z: number, cx: number, cy: number): [number, number] {
-      const fov   = 900
-      const scale = fov / (fov + z)
-      return [cx + x * scale, cy + y * scale]
+      const fov = 1100
+      const s   = fov / (fov + z)
+      return [cx + x * s, cy + y * s]
     }
 
-    // Blue on left half, red only on top-right corner (~1/3)
-    function sphereColor(tx: number, ty: number, tz: number, R: number): { line: string; dot: string } {
-      const nx = tx / R
-      const ny = ty / R
-      const isRed = nx > 0.15 && ny < -0.05
-      const depth = 0.35 + Math.max(0, tz / R) * 0.65
+    // Returns rgba line + dot colors based on 3D position
+    // Red: right half AND upper hemisphere (upper-right ~40%)
+    // Blue: everything else
+    function getColors(tx: number, ty: number, tz: number, R: number) {
+      const nx = tx / R  // -1..1 (left-right)
+      const ny = ty / R  // -1..1 (up is negative)
+      // depth-based opacity so back-facing lines fade out
+      const depth = Math.max(0.15, 0.25 + (tz / R + 1) * 0.55)
+
+      const isRed = nx > 0.0 && ny < 0.10
 
       if (isRed) {
-        const alpha = (depth * 0.85).toFixed(2)
         return {
-          line: `rgba(244,0,0,${alpha})`,
-          dot:  `rgba(253,93,93,${Math.min(1, parseFloat(alpha) + 0.15).toFixed(2)})`,
+          line: `rgba(244,0,0,${(depth * 0.90).toFixed(2)})`,
+          dot:  `rgba(253,93,93,${Math.min(1, depth * 1.05).toFixed(2)})`,
+          glowR: [253, 93, 93],
         }
       }
-      const alpha = (depth * 0.75).toFixed(2)
       return {
-        line: `rgba(0,157,231,${alpha})`,
-        dot:  `rgba(96,200,247,${Math.min(1, parseFloat(alpha) + 0.15).toFixed(2)})`,
+        line: `rgba(0,157,231,${(depth * 0.80).toFixed(2)})`,
+        dot:  `rgba(96,200,247,${Math.min(1, depth).toFixed(2)})`,
+        glowR: [96, 200, 247],
       }
+    }
+
+    function drawOrb(ox: number, oy: number, r: number, col: string) {
+      // Outer glow halo
+      const g = ctx.createRadialGradient(ox, oy, 0, ox, oy, r * 3.2)
+      g.addColorStop(0,   col + 'bb')
+      g.addColorStop(0.35, col + '55')
+      g.addColorStop(1,   col + '00')
+      ctx.beginPath()
+      ctx.arc(ox, oy, r * 3.2, 0, Math.PI * 2)
+      ctx.fillStyle = g
+      ctx.fill()
+      // Solid core
+      ctx.beginPath()
+      ctx.arc(ox, oy, r, 0, Math.PI * 2)
+      ctx.fillStyle = col
+      ctx.fill()
+      // Bright specular highlight
+      const h = ctx.createRadialGradient(ox - r * 0.3, oy - r * 0.3, 0, ox, oy, r)
+      h.addColorStop(0,   'rgba(255,255,255,0.5)')
+      h.addColorStop(0.4, 'rgba(255,255,255,0.0)')
+      ctx.beginPath()
+      ctx.arc(ox, oy, r, 0, Math.PI * 2)
+      ctx.fillStyle = h
+      ctx.fill()
     }
 
     function drawGlobe(t: number) {
-      const W  = canvas.width  / window.devicePixelRatio
-      const H  = canvas.height / window.devicePixelRatio
-      const cx = W * 0.68
-      const cy = H * 0.50
-      const R  = Math.min(H * 0.34, 200)
+      const W   = canvas.width  / window.devicePixelRatio
+      const H   = canvas.height / window.devicePixelRatio
+      // Globe center: right-of-center horizontally, vertically centered
+      const cx  = W * 0.62
+      const cy  = H * 0.50
+      // Large globe — fills ~55% of viewport height, capped
+      const R   = Math.min(H * 0.44, 300)
       const rot = rotRef.current
 
-      ctx.save()
       ctx.clearRect(0, 0, W, H)
 
-      // ── Floating orbs ───────────────────────────────────
-      orbs.forEach((orb) => {
-        const ox = cx + orb.ox * R + Math.sin(t * orb.speed * 1000) * 8
-        const oy = cy + orb.oy * R + Math.cos(t * orb.speed * 800) * 6
-
-        const grd = ctx.createRadialGradient(ox, oy, 0, ox, oy, orb.r * 2.5)
-        grd.addColorStop(0,   orb.color + 'cc')
-        grd.addColorStop(0.4, orb.color + '66')
-        grd.addColorStop(1,   orb.color + '00')
-        ctx.beginPath()
-        ctx.arc(ox, oy, orb.r * 2.5, 0, Math.PI * 2)
-        ctx.fillStyle = grd
-        ctx.fill()
-
-        ctx.beginPath()
-        ctx.arc(ox, oy, orb.r, 0, Math.PI * 2)
-        ctx.fillStyle = orb.color
-        ctx.fill()
+      // ── Orbs ──────────────────────────────────────────────
+      orbs.forEach((orb, i) => {
+        const ox = cx + orb.ox * R + Math.sin(t * 0.0003 + i) * 10
+        const oy = cy + orb.oy * R + Math.cos(t * 0.0004 + i) *  8
+        drawOrb(ox, oy, orb.r, orb.col)
       })
 
-      // ── Outer always-visible ring ───────────────────────
+      // ── Outer glow ring (always visible) ──────────────────
+      // Soft wide aura
+      const ringGlow = ctx.createRadialGradient(cx, cy, R - 4, cx, cy, R + 28)
+      ringGlow.addColorStop(0,   'rgba(0,157,231,0.22)')
+      ringGlow.addColorStop(0.5, 'rgba(0,157,231,0.08)')
+      ringGlow.addColorStop(1,   'rgba(0,157,231,0.00)')
+      ctx.beginPath()
+      ctx.arc(cx, cy, R + 28, 0, Math.PI * 2)
+      ctx.fillStyle = ringGlow
+      ctx.fill()
+      // Crisp ring
       ctx.beginPath()
       ctx.arc(cx, cy, R, 0, Math.PI * 2)
-      ctx.strokeStyle = 'rgba(0,157,231,0.28)'
+      ctx.strokeStyle = 'rgba(0,157,231,0.40)'
       ctx.lineWidth = 1.8
       ctx.stroke()
 
-      // ── Collect all intersection points ─────────────────
-      type Intersection = { px: number; py: number; tx: number; ty: number; tz: number }
-      const intersections: Intersection[] = []
+      // ── Build intersection list ───────────────────────────
+      type Pt = { px: number; py: number; tx: number; ty: number; tz: number }
+      const dots: Pt[] = []
 
-      // ── Latitude rings ──────────────────────────────────
+      // ── Latitude rings ────────────────────────────────────
       for (let i = 1; i < LATS; i++) {
         const phi = (i / LATS) * Math.PI
         const ry  = R * Math.cos(phi)
         const rr  = R * Math.sin(phi)
-        const STEPS = 90
 
-        const pts: { px: number; py: number; tx: number; ty: number; tz: number }[] = []
-        for (let s = 0; s <= STEPS; s++) {
-          const theta = (s / STEPS) * Math.PI * 2 + rot
-          const wx = rr * Math.sin(theta)
-          const wz = rr * Math.cos(theta)
-          const [tx, ty, tz] = applyTilt(wx, ry, wz)
-          const [px, py]     = project(tx, ty, tz, cx, cy)
+        const pts: Pt[] = []
+        for (let s = 0; s <= STEPS_LAT; s++) {
+          const theta = (s / STEPS_LAT) * Math.PI * 2 + rot
+          const [tx, ty, tz] = tilt(rr * Math.sin(theta), ry, rr * Math.cos(theta))
+          const [px, py] = project(tx, ty, tz, cx, cy)
           pts.push({ px, py, tx, ty, tz })
         }
 
-        // Draw segments
-        for (let s = 0; s < STEPS; s++) {
-          if (pts[s].tz < -R * 0.05) continue
-          const { line } = sphereColor(pts[s].tx, pts[s].ty, pts[s].tz, R)
+        for (let s = 0; s < STEPS_LAT; s++) {
+          const p = pts[s]
+          if (p.tz < -R * 0.08) continue
+          const { line } = getColors(p.tx, p.ty, p.tz, R)
           ctx.beginPath()
-          ctx.moveTo(pts[s].px, pts[s].py)
+          ctx.moveTo(p.px, p.py)
           ctx.lineTo(pts[s + 1].px, pts[s + 1].py)
           ctx.strokeStyle = line
-          ctx.lineWidth = 1.6
+          ctx.lineWidth   = 1.8
           ctx.stroke()
         }
 
-        // Intersection dots at each meridian crossing
+        // Collect dots at meridian crossings
         for (let j = 0; j < LNGS; j++) {
           const theta = (j / LNGS) * Math.PI * 2 + rot
-          const wx = rr * Math.sin(theta)
-          const wz = rr * Math.cos(theta)
-          const [tx, ty, tz] = applyTilt(wx, ry, wz)
-          if (tz < -R * 0.05) continue
+          const [tx, ty, tz] = tilt(rr * Math.sin(theta), ry, rr * Math.cos(theta))
+          if (tz < -R * 0.08) continue
           const [px, py] = project(tx, ty, tz, cx, cy)
-          intersections.push({ px, py, tx, ty, tz })
+          dots.push({ px, py, tx, ty, tz })
         }
       }
 
-      // ── Meridians ───────────────────────────────────────
+      // ── Meridians ─────────────────────────────────────────
       for (let j = 0; j < LNGS; j++) {
         const theta = (j / LNGS) * Math.PI * 2 + rot
-        const STEPS = 60
+        const sinTh = Math.sin(theta)
+        const cosTh = Math.cos(theta)
 
-        const pts: { px: number; py: number; tx: number; ty: number; tz: number }[] = []
-        for (let s = 0; s <= STEPS; s++) {
-          const phi = (s / STEPS) * Math.PI
-          const wx  = R * Math.sin(phi) * Math.sin(theta)
-          const wy  = R * Math.cos(phi)
-          const wz  = R * Math.sin(phi) * Math.cos(theta)
-          const [tx, ty, tz] = applyTilt(wx, wy, wz)
-          const [px, py]     = project(tx, ty, tz, cx, cy)
+        const pts: Pt[] = []
+        for (let s = 0; s <= STEPS_MER; s++) {
+          const phi = (s / STEPS_MER) * Math.PI
+          const sp  = Math.sin(phi)
+          const [tx, ty, tz] = tilt(R * sp * sinTh, R * Math.cos(phi), R * sp * cosTh)
+          const [px, py] = project(tx, ty, tz, cx, cy)
           pts.push({ px, py, tx, ty, tz })
         }
 
-        for (let s = 0; s < STEPS; s++) {
-          if (pts[s].tz < -R * 0.05) continue
-          const { line } = sphereColor(pts[s].tx, pts[s].ty, pts[s].tz, R)
+        for (let s = 0; s < STEPS_MER; s++) {
+          const p = pts[s]
+          if (p.tz < -R * 0.08) continue
+          const { line } = getColors(p.tx, p.ty, p.tz, R)
           ctx.beginPath()
-          ctx.moveTo(pts[s].px, pts[s].py)
+          ctx.moveTo(p.px, p.py)
           ctx.lineTo(pts[s + 1].px, pts[s + 1].py)
           ctx.strokeStyle = line
-          ctx.lineWidth = 1.6
+          ctx.lineWidth   = 1.8
           ctx.stroke()
         }
       }
 
-      // ── Draw all intersection dots on top ───────────────
-      for (const { px, py, tx, ty, tz } of intersections) {
-        const { dot } = sphereColor(tx, ty, tz, R)
-        const depthScale = 0.5 + (tz / R + 1) * 0.35
-        const dotR = Math.max(1.2, 2.8 * depthScale)
+      // ── Intersection dots (drawn last — on top) ────────────
+      for (const { px, py, tx, ty, tz } of dots) {
+        const { glowR } = getColors(tx, ty, tz, R)
+        const depth = Math.max(0.3, 0.3 + (tz / R + 1) * 0.4)
+        const dotR  = Math.max(1.5, 3.5 * depth)
+        const [r, g, b] = glowR
 
-        // Glow
-        const grd = ctx.createRadialGradient(px, py, 0, px, py, dotR * 3)
-        grd.addColorStop(0, dot.replace(')', ', 0.5)').replace('rgba(', 'rgba('))
-        grd.addColorStop(1, 'transparent')
+        // Glow halo
+        const grd = ctx.createRadialGradient(px, py, 0, px, py, dotR * 4)
+        grd.addColorStop(0,   `rgba(${r},${g},${b},${(depth * 0.65).toFixed(2)})`)
+        grd.addColorStop(0.4, `rgba(${r},${g},${b},${(depth * 0.25).toFixed(2)})`)
+        grd.addColorStop(1,   `rgba(${r},${g},${b},0)`)
         ctx.beginPath()
-        ctx.arc(px, py, dotR * 3, 0, Math.PI * 2)
+        ctx.arc(px, py, dotR * 4, 0, Math.PI * 2)
         ctx.fillStyle = grd
         ctx.fill()
 
-        // Solid dot
+        // Solid bright dot
         ctx.beginPath()
         ctx.arc(px, py, dotR, 0, Math.PI * 2)
-        ctx.fillStyle = dot
+        ctx.fillStyle = `rgba(${r},${g},${b},${Math.min(1, depth * 1.1).toFixed(2)})`
         ctx.fill()
       }
-
-      ctx.restore()
     }
 
-    let lastT = 0
-    function tick(t: number) {
-      const dt = t - lastT
-      lastT = t
+    const AUTO_SPIN = 0.0035   // steady auto-rotation speed
 
+    function tick(t: number) {
       if (!dragRef.current.active) {
-        if (Math.abs(dragRef.current.velocity) > 0.0002) {
-          dragRef.current.velocity *= 0.96
+        if (Math.abs(dragRef.current.velocity) > 0.0003) {
+          dragRef.current.velocity *= 0.94   // friction coast-down
           rotRef.current += dragRef.current.velocity
         } else {
           dragRef.current.velocity = 0
-          rotRef.current += 0.003
+          rotRef.current += AUTO_SPIN
         }
       }
-
       drawGlobe(t)
       rafRef.current = requestAnimationFrame(tick)
     }
@@ -239,7 +261,7 @@ export default function Hero() {
     const onMouseMove = (e: MouseEvent) => {
       if (!dragRef.current.active) return
       const dx = e.clientX - dragRef.current.lastX
-      dragRef.current.velocity = dx * 0.003
+      dragRef.current.velocity = dx * 0.004
       rotRef.current += dragRef.current.velocity
       dragRef.current.lastX = e.clientX
     }
