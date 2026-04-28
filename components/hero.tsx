@@ -25,111 +25,82 @@ export default function Hero() {
     const ro = new ResizeObserver(setSize)
     ro.observe(canvas.parentElement!)
 
-    const LATS  = 18   // dense latitude rings
-    const LNGS  = 24   // dense meridians
-    const STEPS_LAT = 100
-    const STEPS_MER = 60
+    const LATS  = 14   // more rings for density
+    const LNGS  = 20   // more meridians
+    const STEPS_LAT = 120
+    const STEPS_MER = 80
 
-    // Slight tilt for visual interest (15 deg on Y axis)
-    const TILT = (15 * Math.PI) / 180
-    const sinT = Math.sin(TILT)
-    const cosT = Math.cos(TILT)
+    // Y-axis tilt (25 deg) — rotates around the Y axis (left/right lean)
+    const TILT_Y = (25 * Math.PI) / 180
+    const sinTY = Math.sin(TILT_Y)
+    const cosTY = Math.cos(TILT_Y)
 
-    // Floating spheres matching the reference exactly:
-    // 1 large red (top), 1 medium blue (upper-left), several small blue (bottom area)
+    // Floating orbs matching reference exactly
     const orbs = [
-      { ox: -0.15, oy: -1.25, r: 16, col: '#f40000' }, // large red top
-      { ox: -1.20, oy: -0.40, r: 12, col: '#009de7' }, // medium blue upper-left
-      { ox: -0.95, oy:  0.85, r:  5, col: '#009de7' }, // tiny blue bottom-left
-      { ox: -0.10, oy:  1.15, r:  8, col: '#009de7' }, // small blue bottom-center
-      { ox:  0.85, oy:  0.95, r:  6, col: '#009de7' }, // tiny blue bottom-right
-      { ox:  1.10, oy:  0.20, r:  4, col: '#009de7' }, // tiny blue mid-right
+      { ox: -0.30, oy: -1.10, r: 22, col: '#f40000' }, // large red top
+      { ox: -1.30, oy: -0.25, r: 16, col: '#009de7' }, // large blue left
+      { ox:  1.10, oy: -0.60, r: 11, col: '#fd5d5d' }, // small red right
+      { ox:  1.20, oy:  0.50, r:  9, col: '#f40000' }, // tiny red lower-right
+      { ox: -0.20, oy:  1.20, r: 18, col: '#009de7' }, // medium blue bottom
+      { ox:  0.70, oy:  1.10, r: 13, col: '#253093' }, // blue bottom-right
     ]
 
+    // Tilt around Y axis
     function tilt(wx: number, wy: number, wz: number): [number, number, number] {
-      return [wx * cosT + wz * sinT, wy, -wx * sinT + wz * cosT]
+      return [wx * cosTY + wz * sinTY, wy, -wx * sinTY + wz * cosTY]
     }
 
+    // Simple perspective projection
     function project(x: number, y: number, z: number, cx: number, cy: number): [number, number] {
-      const fov = 1000
-      const s = fov / (fov + z)
+      const fov = 1100
+      const s   = fov / (fov + z)
       return [cx + x * s, cy + y * s]
     }
 
-    // Color logic: blue on left (~65%), red on upper-right (~35%), purple transition zone
-    function getColor(tx: number, ty: number, tz: number, R: number) {
-      const nx = tx / R  // -1 (left) to 1 (right)
-      const ny = ty / R  // -1 (top) to 1 (bottom)
-      const depth = Math.max(0.20, 0.30 + (tz / R + 1) * 0.50)
+    // Returns rgba line + dot colors based on 3D position
+    // Red: right half AND upper hemisphere (upper-right ~40%)
+    // Blue: everything else
+    function getColors(tx: number, ty: number, tz: number, R: number) {
+      const nx = tx / R  // -1..1 (left-right)
+      const ny = ty / R  // -1..1 (up is negative)
+      // depth-based opacity so back-facing lines fade out
+      const depth = Math.max(0.15, 0.25 + (tz / R + 1) * 0.55)
 
-      // Transition zone: blend from blue to purple to red
-      // Full blue when nx < -0.2, full red when nx > 0.4 && ny < 0
-      const blueR = 0, blueG = 157, blueB = 231
-      const redR = 244, redG = 0, redB = 0
-      const purpleR = 120, purpleG = 60, purpleB = 180
+      const isRed = nx > 0.0 && ny < 0.10
 
-      let r: number, g: number, b: number
-
-      if (nx < -0.15) {
-        // Left side: pure blue
-        r = blueR; g = blueG; b = blueB
-      } else if (nx > 0.35 && ny < 0.15) {
-        // Upper-right: pure red
-        r = redR; g = redG; b = redB
-      } else if (nx >= -0.15 && nx <= 0.35) {
-        // Transition zone: blue -> purple -> red
-        const t = (nx + 0.15) / 0.5  // 0 to 1
-        if (ny < 0.15) {
-          // Upper half transitions to red via purple
-          if (t < 0.5) {
-            const t2 = t * 2
-            r = blueR + (purpleR - blueR) * t2
-            g = blueG + (purpleG - blueG) * t2
-            b = blueB + (purpleB - blueB) * t2
-          } else {
-            const t2 = (t - 0.5) * 2
-            r = purpleR + (redR - purpleR) * t2
-            g = purpleG + (redG - purpleG) * t2
-            b = purpleB + (redB - purpleB) * t2
-          }
-        } else {
-          // Lower half stays more blue-ish purple
-          r = blueR + (purpleR - blueR) * t * 0.6
-          g = blueG + (purpleG - blueG) * t * 0.6
-          b = blueB + (purpleB - blueB) * t * 0.4
+      if (isRed) {
+        return {
+          line: `rgba(244,0,0,${(depth * 0.90).toFixed(2)})`,
+          dot:  `rgba(253,93,93,${Math.min(1, depth * 1.05).toFixed(2)})`,
+          glowR: [253, 93, 93],
         }
-      } else {
-        // Lower-right: stays blue-purple
-        r = blueR + 40; g = blueG - 50; b = blueB - 30
       }
-
       return {
-        line: `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${(depth * 0.75).toFixed(2)})`,
-        dot: [Math.round(r), Math.round(g), Math.round(b), depth] as [number, number, number, number],
+        line: `rgba(0,157,231,${(depth * 0.80).toFixed(2)})`,
+        dot:  `rgba(96,200,247,${Math.min(1, depth).toFixed(2)})`,
+        glowR: [96, 200, 247],
       }
     }
 
     function drawOrb(ox: number, oy: number, r: number, col: string) {
-      // Soft outer glow
-      const g = ctx.createRadialGradient(ox, oy, 0, ox, oy, r * 1.8)
-      g.addColorStop(0, col + '55')
-      g.addColorStop(0.6, col + '18')
-      g.addColorStop(1, col + '00')
+      // Outer glow halo — subtler
+      const g = ctx.createRadialGradient(ox, oy, 0, ox, oy, r * 2.0)
+      g.addColorStop(0,   col + '66')
+      g.addColorStop(0.5, col + '22')
+      g.addColorStop(1,   col + '00')
       ctx.beginPath()
-      ctx.arc(ox, oy, r * 1.8, 0, Math.PI * 2)
+      ctx.arc(ox, oy, r * 2.0, 0, Math.PI * 2)
       ctx.fillStyle = g
       ctx.fill()
-
-      // Solid sphere
+      // Solid core
       ctx.beginPath()
       ctx.arc(ox, oy, r, 0, Math.PI * 2)
       ctx.fillStyle = col
       ctx.fill()
-
-      // Specular highlight
-      const h = ctx.createRadialGradient(ox - r * 0.25, oy - r * 0.25, 0, ox, oy, r)
-      h.addColorStop(0, 'rgba(255,255,255,0.40)')
-      h.addColorStop(0.5, 'rgba(255,255,255,0.0)')
+      // Bright specular highlight
+      const h = ctx.createRadialGradient(ox - r * 0.3, oy - r * 0.3, 0, ox, oy, r)
+      h.addColorStop(0,   'rgba(255,255,255,0.5)')
+      h.addColorStop(0.4, 'rgba(255,255,255,0.0)')
       ctx.beginPath()
       ctx.arc(ox, oy, r, 0, Math.PI * 2)
       ctx.fillStyle = h
@@ -137,30 +108,48 @@ export default function Hero() {
     }
 
     function drawGlobe(t: number) {
-      const W = canvas.width / window.devicePixelRatio
-      const H = canvas.height / window.devicePixelRatio
-      const cx = W * 0.58
-      const cy = H * 0.50
-      const R = Math.min(H * 0.34, 220)
+      const W   = canvas.width  / window.devicePixelRatio
+      const H   = canvas.height / window.devicePixelRatio
+      // Globe center: right-of-center horizontally, vertically centered
+      const cx  = W * 0.65
+      const cy  = H * 0.50
+      // Smaller globe — fills ~28% of viewport height
+      const R   = Math.min(H * 0.28, 190)
       const rot = rotRef.current
 
       ctx.clearRect(0, 0, W, H)
 
-      // Draw floating orbs
+      // ── Orbs ──────────────────────────────────────────────
       orbs.forEach((orb, i) => {
-        const ox = cx + orb.ox * R + Math.sin(t * 0.0002 + i * 1.5) * 6
-        const oy = cy + orb.oy * R + Math.cos(t * 0.00025 + i * 1.2) * 5
+        const ox = cx + orb.ox * R + Math.sin(t * 0.0003 + i) * 10
+        const oy = cy + orb.oy * R + Math.cos(t * 0.0004 + i) *  8
         drawOrb(ox, oy, orb.r, orb.col)
       })
 
+      // ── Outer glow ring (always visible) ──────────────────
+      const ringGlow = ctx.createRadialGradient(cx, cy, R - 2, cx, cy, R + 16)
+      ringGlow.addColorStop(0,   'rgba(0,157,231,0.10)')
+      ringGlow.addColorStop(1,   'rgba(0,157,231,0.00)')
+      ctx.beginPath()
+      ctx.arc(cx, cy, R + 16, 0, Math.PI * 2)
+      ctx.fillStyle = ringGlow
+      ctx.fill()
+      // Crisp ring
+      ctx.beginPath()
+      ctx.arc(cx, cy, R, 0, Math.PI * 2)
+      ctx.strokeStyle = 'rgba(0,157,231,0.30)'
+      ctx.lineWidth = 1.4
+      ctx.stroke()
+
+      // ── Build intersection list ───────────────────────────
       type Pt = { px: number; py: number; tx: number; ty: number; tz: number }
       const dots: Pt[] = []
 
-      // Latitude rings
+      // ── Latitude rings ────────────────────────────────────
       for (let i = 1; i < LATS; i++) {
         const phi = (i / LATS) * Math.PI
-        const ry = R * Math.cos(phi)
-        const rr = R * Math.sin(phi)
+        const ry  = R * Math.cos(phi)
+        const rr  = R * Math.sin(phi)
 
         const pts: Pt[] = []
         for (let s = 0; s <= STEPS_LAT; s++) {
@@ -172,26 +161,27 @@ export default function Hero() {
 
         for (let s = 0; s < STEPS_LAT; s++) {
           const p = pts[s]
-          if (p.tz < -R * 0.12) continue
-          const { line } = getColor(p.tx, p.ty, p.tz, R)
+          if (p.tz < -R * 0.08) continue
+          const { line } = getColors(p.tx, p.ty, p.tz, R)
           ctx.beginPath()
           ctx.moveTo(p.px, p.py)
           ctx.lineTo(pts[s + 1].px, pts[s + 1].py)
           ctx.strokeStyle = line
-          ctx.lineWidth = 1.0
+          ctx.lineWidth   = 1.8
           ctx.stroke()
         }
 
+        // Collect dots at meridian crossings
         for (let j = 0; j < LNGS; j++) {
           const theta = (j / LNGS) * Math.PI * 2 + rot
           const [tx, ty, tz] = tilt(rr * Math.sin(theta), ry, rr * Math.cos(theta))
-          if (tz < -R * 0.12) continue
+          if (tz < -R * 0.08) continue
           const [px, py] = project(tx, ty, tz, cx, cy)
           dots.push({ px, py, tx, ty, tz })
         }
       }
 
-      // Meridians
+      // ── Meridians ─────────────────────────────────────────
       for (let j = 0; j < LNGS; j++) {
         const theta = (j / LNGS) * Math.PI * 2 + rot
         const sinTh = Math.sin(theta)
@@ -200,7 +190,7 @@ export default function Hero() {
         const pts: Pt[] = []
         for (let s = 0; s <= STEPS_MER; s++) {
           const phi = (s / STEPS_MER) * Math.PI
-          const sp = Math.sin(phi)
+          const sp  = Math.sin(phi)
           const [tx, ty, tz] = tilt(R * sp * sinTh, R * Math.cos(phi), R * sp * cosTh)
           const [px, py] = project(tx, ty, tz, cx, cy)
           pts.push({ px, py, tx, ty, tz })
@@ -208,36 +198,37 @@ export default function Hero() {
 
         for (let s = 0; s < STEPS_MER; s++) {
           const p = pts[s]
-          if (p.tz < -R * 0.12) continue
-          const { line } = getColor(p.tx, p.ty, p.tz, R)
+          if (p.tz < -R * 0.08) continue
+          const { line } = getColors(p.tx, p.ty, p.tz, R)
           ctx.beginPath()
           ctx.moveTo(p.px, p.py)
           ctx.lineTo(pts[s + 1].px, pts[s + 1].py)
           ctx.strokeStyle = line
-          ctx.lineWidth = 1.0
+          ctx.lineWidth   = 1.8
           ctx.stroke()
         }
       }
 
-      // Intersection dots — small and subtle
+      // ── Intersection dots (drawn last — on top) ────────────
       for (const { px, py, tx, ty, tz } of dots) {
-        const { dot } = getColor(tx, ty, tz, R)
-        const [r, g, b, depth] = dot
-        const dotR = Math.max(1.0, 1.8 * depth)
+        const { glowR } = getColors(tx, ty, tz, R)
+        const depth = Math.max(0.3, 0.3 + (tz / R + 1) * 0.4)
+        const dotR  = Math.max(1.2, 2.5 * depth)
+        const [r, g, b] = glowR
 
-        // Tiny glow
-        const grd = ctx.createRadialGradient(px, py, 0, px, py, dotR * 2)
-        grd.addColorStop(0, `rgba(${r},${g},${b},${(depth * 0.35).toFixed(2)})`)
-        grd.addColorStop(1, `rgba(${r},${g},${b},0)`)
+        // Subtle glow halo
+        const grd = ctx.createRadialGradient(px, py, 0, px, py, dotR * 2.5)
+        grd.addColorStop(0,   `rgba(${r},${g},${b},${(depth * 0.30).toFixed(2)})`)
+        grd.addColorStop(1,   `rgba(${r},${g},${b},0)`)
         ctx.beginPath()
-        ctx.arc(px, py, dotR * 2, 0, Math.PI * 2)
+        ctx.arc(px, py, dotR * 2.5, 0, Math.PI * 2)
         ctx.fillStyle = grd
         ctx.fill()
 
-        // Solid dot
+        // Solid bright dot
         ctx.beginPath()
         ctx.arc(px, py, dotR, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(${r},${g},${b},${Math.min(1, depth * 0.9).toFixed(2)})`
+        ctx.fillStyle = `rgba(${r},${g},${b},${Math.min(1, depth * 1.1).toFixed(2)})`
         ctx.fill()
       }
     }
