@@ -160,7 +160,7 @@ export default function Results() {
           {/* Chart header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <h3 className="text-base font-medium text-foreground">Outreach Performance</h3>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 glass-bar rounded-xl p-1">
               {tabs.map(tab => (
                 <button
                   key={tab}
@@ -168,7 +168,7 @@ export default function Results() {
                   className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     activeTab === tab
                       ? 'bg-[var(--brand-blue)] text-white shadow-md shadow-blue-500/20'
-                      : 'bg-white/5 text-[var(--text-secondary)] hover:bg-white/10 hover:text-foreground'
+                      : 'text-[var(--text-secondary)] hover:text-foreground'
                   }`}
                 >
                   {tab}
@@ -237,14 +237,14 @@ export default function Results() {
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {data.stats.map((s, i) => (
-            <div key={`${activeTab}-${i}`} className="text-center fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
-              <div className="text-4xl md:text-5xl font-semibold text-[var(--brand-blue)] mb-1">
+            <div key={`${activeTab}-${i}`} className="glass-card rounded-xl p-4 md:p-5 text-center fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
+              <div className="text-3xl md:text-4xl lg:text-5xl font-semibold text-[var(--brand-blue)] mb-1">
                 <CountUp target={s.value} prefix={s.prefix} suffix={s.suffix} />
               </div>
-              <p className="text-sm font-medium text-foreground mb-0.5">{s.label}</p>
-              <p className="text-xs text-[var(--text-muted)]">{s.period}</p>
+              <p className="text-xs md:text-sm font-medium text-foreground mb-0.5">{s.label}</p>
+              <p className="text-[10px] md:text-xs text-[var(--text-muted)]">{s.period}</p>
             </div>
           ))}
         </div>

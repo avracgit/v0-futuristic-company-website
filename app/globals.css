@@ -122,8 +122,8 @@ html.dark {
 .section-base {
   position: relative;
   overflow: hidden;
-  padding-top: 7rem;
-  padding-bottom: 7rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
@@ -156,17 +156,30 @@ html.dark {
 
 /* ─── Glass card ─────────────────────────────────────────── */
 .glass-card {
-  background: rgba(248, 250, 252, 0.85);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(59, 130, 246, 0.13);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(59, 130, 246, 0.15);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 html.dark .glass-card {
-  background: rgba(13, 18, 36, 0.85);
+  background: rgba(13, 18, 36, 0.65);
+  border-color: rgba(59, 130, 246, 0.12);
 }
 .glass-card:hover {
-  border-color: rgba(59, 130, 246, 0.28);
+  border-color: rgba(59, 130, 246, 0.30);
   box-shadow: 0 0 32px rgba(59, 130, 246, 0.08);
+}
+
+/* ─── Glass bar (navbar-style) ──────────────────────────── */
+.glass-bar {
+  background: rgba(255, 255, 255, 0.60);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+}
+html.dark .glass-bar {
+  background: rgba(10, 15, 28, 0.75);
 }
 
 /* ─── Integration node ───────────────────────────────────── */

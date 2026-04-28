@@ -66,18 +66,18 @@ export default function Stats() {
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[var(--background)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {stats.map((stat, i) => (
-            <div key={i} className="text-center group">
+            <div key={i} className="glass-card rounded-2xl p-5 md:p-6 text-center group">
               <div
-                className="font-sans font-bold text-5xl md:text-6xl mb-2 transition-all duration-300"
+                className="font-sans font-bold text-4xl md:text-5xl lg:text-6xl mb-2 transition-all duration-300"
                 style={{ color: stat.color }}
               >
                 <CountUp target={stat.value} suffix={stat.suffix} />
               </div>
-              <p className="font-mono text-xs text-[#6b7494] tracking-widest uppercase">{stat.label}</p>
+              <p className="font-mono text-[10px] md:text-xs text-[#6b7494] tracking-widest uppercase">{stat.label}</p>
               <div
-                className="mt-4 h-px w-0 group-hover:w-full mx-auto transition-all duration-500"
+                className="mt-3 h-px w-0 group-hover:w-full mx-auto transition-all duration-500"
                 style={{ background: `linear-gradient(90deg, transparent, ${stat.color}, transparent)` }}
               />
             </div>

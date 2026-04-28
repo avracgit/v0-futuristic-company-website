@@ -22,7 +22,7 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#0a0f1c]/95 backdrop-blur-xl border-b border-[rgba(59,130,246,0.1)]'
+          ? 'glass-bar border-b'
           : 'bg-transparent'
       }`}
     >

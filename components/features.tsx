@@ -101,10 +101,10 @@ export default function Features() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
           {/* Left: feature selector */}
           <div>
-            <h2 className="font-semibold text-3xl md:text-4xl lg:text-5xl text-foreground mb-10 leading-tight">
+            <h2 className="font-semibold text-2xl md:text-4xl lg:text-5xl text-foreground mb-6 md:mb-10 leading-tight">
               Scale Automatically
               <br />
               For <span className="text-[var(--brand-blue)]">Success</span>

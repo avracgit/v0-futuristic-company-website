@@ -281,7 +281,7 @@ export default function Hero() {
       <div className="relative z-10 min-h-screen flex items-center px-8 md:px-16 lg:px-20 pointer-events-none">
         <div className="max-w-lg lg:max-w-xl fade-in-up pointer-events-auto">
           <p className="text-xs font-semibold tracking-widest uppercase text-[var(--text-muted)] mb-8">
-            Trusted in 30+ countries
+            Trusted across 5 countries
           </p>
 
           <h1 className="font-semibold text-5xl md:text-6xl lg:text-7xl leading-[1.2] tracking-tight text-balance mb-8">
@@ -308,14 +308,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="mt-20">
-            <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
-              <svg className="w-4 h-4 text-[var(--brand-blue)] scroll-indicator" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-              Scroll to explore
-            </div>
-          </div>
+
         </div>
       </div>
     </section>
