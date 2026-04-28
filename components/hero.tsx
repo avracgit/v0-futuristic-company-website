@@ -32,26 +32,15 @@ export default function Hero() {
     ro.observe(canvas.parentElement!)
 
     // ── floating orbs ───────────────────────────────────────
-    // Positions match hand-drawn sketch (offsets relative to globe center)
+    // Circular pattern around globe: south pole (bottom) to north pole (top), ascending in size
     const orbs: Orb[] = [
-      // Large red — far top-left, well clear of globe
-      { x: -340, y: -220, z: 0, r: 18, color: '#dc2626', vx: 0, vy: 0 },
-      // Medium blue — upper-left, between large red and globe
-      { x: -270, y: -145, z: 0, r: 11, color: '#3b82f6', vx: 0, vy: 0 },
-      // Small red — just above globe top-center (above north pole)
-      { x:  -40, y: -235, z: 0, r:  8, color: '#dc2626', vx: 0, vy: 0 },
-      // Small teal — close to globe, upper-left edge
-      { x: -215, y:  -90, z: 0, r:  6, color: '#06b6d4', vx: 0, vy: 0 },
-      // Medium teal — mid-left, slightly further out
-      { x: -290, y:   10, z: 0, r:  9, color: '#06b6d4', vx: 0, vy: 0 },
-      // Large blue — mid-left, close to left edge
-      { x: -330, y:  -30, z: 0, r: 14, color: '#3b82f6', vx: 0, vy: 0 },
-      // Largest teal — lower-left, biggest orb
-      { x: -305, y:  140, z: 0, r: 20, color: '#06b6d4', vx: 0, vy: 0 },
-      // Medium blue — lower-left below large teal
-      { x: -240, y:  195, z: 0, r: 10, color: '#3b82f6', vx: 0, vy: 0 },
-      // Small teal — bottom center-left
-      { x: -100, y:  255, z: 0, r:  6, color: '#06b6d4', vx: 0, vy: 0 },
+      { x: -220, y:  210, z: 0, r:  4, color: '#3b82f6', vx: 0, vy: 0 }, // south pole
+      { x: -240, y:  150, z: 0, r:  6, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -250, y:   80, z: 0, r:  7, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -255, y:    0, z: 0, r:  8, color: '#3b82f6', vx: 0, vy: 0 }, // equator
+      { x: -250, y:  -80, z: 0, r:  9, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -240, y: -150, z: 0, r: 11, color: '#3b82f6', vx: 0, vy: 0 },
+      { x: -220, y: -210, z: 0, r: 13, color: '#dc2626', vx: 0, vy: 0 }, // north pole
     ]
 
     // ── constants ───────────────────────────────────────────
@@ -180,7 +169,7 @@ export default function Hero() {
       for (const orb of orbs) {
         // Static positioning — no animation
         const [px, py] = project(orb.x, orb.y, orb.z, cx, cy)
-        const base = orb.color === '#dc2626' ? '220,38,38' : orb.color === '#06b6d4' ? '6,182,212' : '59,130,246'
+        const base = orb.color === '#dc2626' ? '220,38,38' : '59,130,246'
         
         // Glow halo
         const grd  = ctx.createRadialGradient(px, py, 0, px, py, orb.r * 3.2)
