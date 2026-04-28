@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Light theme background */
+  /* Light theme (default) */
   --background: #ffffff;
   --foreground: #0f1419;
   --card: #f5f7fa;
@@ -41,6 +41,44 @@
   --surface-card: #f5f7fa;
   --surface-elevated: #ffffff;
   --surface-mid: #fafbfc;
+}
+
+/* Dark theme */
+html.dark {
+  --background: #01102a;
+  --foreground: #f0f4ff;
+  --card: #0a1a3a;
+  --card-foreground: #f0f4ff;
+  --popover: #0a1a3a;
+  --popover-foreground: #f0f4ff;
+  --primary: #009de7;
+  --primary-foreground: #ffffff;
+  --secondary: #253093;
+  --secondary-foreground: #94a3b8;
+  --muted: #1e293b;
+  --muted-foreground: #64748b;
+  --accent: #f40000;
+  --accent-foreground: #ffffff;
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: rgba(0, 157, 231, 0.12);
+  --input: #1e293b;
+  --ring: #009de7;
+
+  --brand-blue: #009de7;
+  --brand-blue-secondary: #253093;
+  --brand-blue-light: #60c8f7;
+  --brand-red: #f40000;
+  --brand-red-secondary: #fd5d5d;
+  --brand-red-glow: rgba(244, 0, 0, 0.3);
+  --brand-blue-glow: rgba(0, 157, 231, 0.3);
+
+  --text-primary: #f0f4ff;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --surface-card: #0a1a3a;
+  --surface-elevated: #0f2445;
+  --surface-mid: #081830;
 }
 
 @theme inline {
@@ -128,6 +166,13 @@
   border: 1px solid rgba(0, 157, 231, 0.13);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
+html.dark .glass-card {
+  background: rgba(10, 26, 58, 0.85);
+}
+html:not(.dark) .glass-card {
+  background: rgba(245, 247, 250, 0.85);
+  border-color: rgba(0, 157, 231, 0.15);
+}
 .glass-card:hover {
   border-color: rgba(0, 157, 231, 0.28);
   box-shadow: 0 0 32px rgba(0, 157, 231, 0.08);
@@ -139,6 +184,10 @@
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 12px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+html:not(.dark) .integration-node {
+  background: rgba(245, 247, 250, 0.9);
+  border-color: rgba(0, 157, 231, 0.15);
 }
 .integration-node:hover {
   border-color: rgba(0, 157, 231, 0.45);
@@ -263,6 +312,13 @@
   background: rgba(255,255,255,0.05);
   transform: translateY(-2px);
 }
+html:not(.dark) .btn-ghost {
+  border-color: rgba(15,20,25,0.12);
+}
+html:not(.dark) .btn-ghost:hover {
+  border-color: rgba(15,20,25,0.30);
+  background: rgba(15,20,25,0.05);
+}
 
 /* ─── Section Nav (left sidebar) ─────────────────────────── */
 .section-nav {
@@ -283,6 +339,10 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   cursor: pointer;
+}
+html:not(.dark) .section-nav-dot {
+  background: rgba(15, 20, 25, 0.1);
+  border-color: rgba(15, 20, 25, 0.1);
 }
 .section-nav-dot:hover {
   background: rgba(0, 157, 231, 0.5);
@@ -319,6 +379,30 @@
 .back-to-top:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(0, 157, 231, 0.4);
+}
+
+/* ─── Theme toggle ────────────────────────────────────────── */
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--foreground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+html:not(.dark) .theme-toggle {
+  border-color: rgba(15, 20, 25, 0.12);
+  background: rgba(15, 20, 25, 0.05);
+}
+.theme-toggle:hover {
+  border-color: rgba(0, 157, 231, 0.3);
+  background: rgba(0, 157, 231, 0.1);
+  transform: scale(1.05);
 }
 
 /* ─── Utilities ──────────────────────────────────────────── */
