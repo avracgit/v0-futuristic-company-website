@@ -115,7 +115,7 @@ export default function Features() {
                 <button
                   key={f.id}
                   onClick={() => setActiveId(f.id)}
-                  className={`w-full text-left p-5 rounded-xl border transition-all duration-200 ${
+                  className={`w-full text-left p-3 md:p-5 rounded-xl border transition-all duration-200 ${
                     activeId === f.id
                       ? 'border-[var(--brand-blue)] bg-[var(--brand-blue)]/8 shadow-md shadow-blue-500/10'
                       : 'border-white/8 hover:border-white/20 hover:bg-white/4'
@@ -139,7 +139,7 @@ export default function Features() {
           </div>
 
           {/* Right: dynamic preview panel */}
-          <div className="glass-card rounded-2xl overflow-hidden" key={activeId}>
+          <div className="glass-card rounded-2xl overflow-x-auto" key={activeId}>
             {/* Panel header */}
             <div className="px-5 py-4 border-b border-white/8 flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-[var(--brand-blue)]/15 flex items-center justify-center text-[var(--brand-blue)]">

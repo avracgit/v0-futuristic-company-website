@@ -118,7 +118,8 @@ export default function Integrations() {
         </div>
 
         {/* Circuit board diagram */}
-        <div className="relative mx-auto" style={{ maxWidth: 900 }}>
+        <div className="overflow-x-auto -mx-4 px-4">
+        <div className="relative mx-auto" style={{ maxWidth: 900, minWidth: 340 }}>
           <svg
             id="circuit-svg"
             viewBox={`0 0 ${W} ${H}`}
@@ -309,6 +310,7 @@ export default function Integrations() {
               )
             })}
           </svg>
+        </div>
         </div>
       </div>
     </section>
