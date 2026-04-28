@@ -41,18 +41,31 @@ export default function Hero() {
     const LATS  = 12
     const LNGS  = 18
 
+    // 27.5° X-axis tilt — applied to globe AND orbs so they move as one entity
+    const TILT_X = (27.5 * Math.PI) / 180
+    const cosTX  = Math.cos(TILT_X)
+    const sinTX  = Math.sin(TILT_X)
+
+    // Apply X-axis rotation: tilts the top of the sphere away from the viewer
+    function tiltX(x: number, y: number, z: number): [number, number, number] {
+      return [
+        x,
+        y * cosTX - z * sinTX,
+        y * sinTX + z * cosTX,
+      ]
+    }
+
     function project(x: number, y: number, z: number, cx: number, cy: number): [number, number, number] {
       const fov   = 900
       const scale = fov / (fov + z)
       return [cx + x * scale, cy + y * scale, scale]
     }
 
-    // Red only for top-left ~third of the globe: wx < 0 AND wy < -R*0.2
-    // Everything else is blue
+    // Red = top-right quarter: nx > 0.05 AND ny < -0.15 (pre-tilt world coordinates)
     function sphereColor(wx: number, wy: number, R: number): { line: string; dot: string } {
-      const nx = wx / R   // -1 … 1
-      const ny = wy / R   // -1 … 1
-      const isRed = nx < -0.05 && ny < -0.15
+      const nx = wx / R   // -1 … 1  (right is positive)
+      const ny = wy / R   // -1 … 1  (up is negative)
+      const isRed = nx > 0.05 && ny < -0.15
       const depth = 0.35 + Math.abs(nx) * 0.65
 
       if (isRed) {
@@ -70,7 +83,6 @@ export default function Hero() {
     function drawGlobe(rot: number) {
       const W = canvas.width
       const H = canvas.height
-      // Globe sits far right, centered vertically
       const cx = W * 0.72
       const cy = H * 0.50
       const R  = Math.min(H * 0.28, 190)
@@ -82,19 +94,19 @@ export default function Hero() {
         const rr  = R * Math.sin(phi)
         const STEPS = 80
 
-        // Collect all points first for per-segment coloring
-        const pts: { px: number; py: number; wx: number; wy: number; wz: number }[] = []
+        const pts: { px: number; py: number; wx: number; wy: number; tz: number }[] = []
         for (let s = 0; s <= STEPS; s++) {
           const theta = (s / STEPS) * Math.PI * 2 + rot
-          const wx = rr * Math.sin(theta)
-          const wz = rr * Math.cos(theta)
-          const wy = ry
-          const [px, py] = project(wx, wy, wz, cx, cy)
-          pts.push({ px, py, wx, wy, wz })
+          const wx0 = rr * Math.sin(theta)
+          const wz0 = rr * Math.cos(theta)
+          const wy0 = ry
+          const [tx, ty, tz] = tiltX(wx0, wy0, wz0)
+          const [px, py] = project(tx, ty, tz, cx, cy)
+          pts.push({ px, py, wx: wx0, wy: wy0, tz })
         }
 
-        // Draw segment-by-segment so color transitions smoothly
         for (let s = 0; s < STEPS; s++) {
+          if (pts[s].tz < -R * 0.1) continue
           const { line } = sphereColor(pts[s].wx, pts[s].wy, R)
           ctx.beginPath()
           ctx.moveTo(pts[s].px, pts[s].py)
@@ -110,17 +122,19 @@ export default function Hero() {
         const theta = (j / LNGS) * Math.PI * 2 + rot
         const STEPS = 60
 
-        const pts: { px: number; py: number; wx: number; wy: number; wz: number }[] = []
+        const pts: { px: number; py: number; wx: number; wy: number; tz: number }[] = []
         for (let s = 0; s <= STEPS; s++) {
           const phi = (s / STEPS) * Math.PI
-          const wx  = R * Math.sin(phi) * Math.sin(theta)
-          const wy  = R * Math.cos(phi)
-          const wz  = R * Math.sin(phi) * Math.cos(theta)
-          const [px, py] = project(wx, wy, wz, cx, cy)
-          pts.push({ px, py, wx, wy, wz })
+          const wx0 = R * Math.sin(phi) * Math.sin(theta)
+          const wy0 = R * Math.cos(phi)
+          const wz0 = R * Math.sin(phi) * Math.cos(theta)
+          const [tx, ty, tz] = tiltX(wx0, wy0, wz0)
+          const [px, py] = project(tx, ty, tz, cx, cy)
+          pts.push({ px, py, wx: wx0, wy: wy0, tz })
         }
 
         for (let s = 0; s < STEPS; s++) {
+          if (pts[s].tz < -R * 0.1) continue
           const { line } = sphereColor(pts[s].wx, pts[s].wy, R)
           ctx.beginPath()
           ctx.moveTo(pts[s].px, pts[s].py)
@@ -138,14 +152,14 @@ export default function Hero() {
         const rr  = R * Math.sin(phi)
         for (let j = 0; j < LNGS; j++) {
           const theta = (j / LNGS) * Math.PI * 2 + rot
-          const wx = rr * Math.sin(theta)
-          const wz = rr * Math.cos(theta)
-          const wy = ry
-          // Cull back-face
-          if (wz < -R * 0.1) continue
-          const [px, py, sc] = project(wx, wy, wz, cx, cy)
-          const { dot } = sphereColor(wx, wy, R)
-          const dr = Math.max(0.8, 2.0 * sc + (wz / R) * 0.8)
+          const wx0 = rr * Math.sin(theta)
+          const wz0 = rr * Math.cos(theta)
+          const wy0 = ry
+          const [tx, ty, tz] = tiltX(wx0, wy0, wz0)
+          if (tz < -R * 0.1) continue
+          const [px, py, sc] = project(tx, ty, tz, cx, cy)
+          const { dot } = sphereColor(wx0, wy0, R)
+          const dr = Math.max(0.8, 2.0 * sc + (tz / R) * 0.8)
           ctx.beginPath()
           ctx.arc(px, py, dr, 0, Math.PI * 2)
           ctx.fillStyle = dot
@@ -160,23 +174,25 @@ export default function Hero() {
       const cx = W * 0.72
       const cy = H * 0.50
       const R  = Math.min(H * 0.28, 190)
-      // Gap between globe surface and dot center (in px)
-      const GAP = 14
+      // Increased gap so dots hug but don't overlap the globe edge
+      const GAP = 24
 
       for (const orb of orbDefs) {
-        // t=0 → south pole (angle=PI), t=1 → north pole (angle=0)
-        // We place dots on the LEFT side of the globe: angle measured from top going left
-        // phi: 0=north, PI=south along left perimeter (x negative)
-        const phi = (1 - orb.t) * Math.PI  // t=0 → phi=PI (south), t=1 → phi=0 (north)
+        // Place along left perimeter: phi=0 is north pole, phi=PI is south pole
+        const phi = (1 - orb.t) * Math.PI
         const dist = R + GAP + orb.r
 
-        // Left side of globe: x is negative (leftmost point of sphere)
-        // We arc from bottom-left to top-left across the perimeter
-        const worldX = -dist * Math.sin(phi)
-        const worldY = -dist * Math.cos(phi)  // negative y = up in canvas coords
+        // Pre-tilt world coords (on the left side, z=0 in local space)
+        const wx0 =  0
+        const wy0 = -dist * Math.cos(phi)
+        const wz0 =  dist * Math.sin(phi)
 
-        const px = cx + worldX
-        const py = cy + worldY
+        // Apply same X-axis tilt so orbs move with the globe
+        const [tx, ty, tz] = tiltX(-dist * Math.sin(phi), wy0, 0)
+        void tz
+
+        const px = cx + tx
+        const py = cy + ty
 
         const base = orb.color === '#dc2626' ? '220,38,38' : '59,130,246'
 
