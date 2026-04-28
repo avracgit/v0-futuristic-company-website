@@ -72,7 +72,7 @@ const StarRating = ({ rating }: { rating: number }) => (
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="section-base section-blend relative overflow-hidden">
+    <section className="section-base section-blend relative overflow-hidden">
       <div className="absolute inset-0 gradient-radial pointer-events-none" />
 
       <div className="max-w-7xl mx-auto">

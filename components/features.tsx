@@ -86,7 +86,7 @@ export default function Features() {
   const active = features.find(f => f.id === activeId)!
 
   return (
-    <section id="features" className="section-base section-blend relative bg-[var(--surface-mid)]">
+    <section className="section-base section-blend relative bg-[var(--surface-mid)]">
       {/* Soft gradient top transition */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[var(--background)] to-transparent pointer-events-none" />
 
