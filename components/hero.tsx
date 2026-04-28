@@ -3,21 +3,17 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 
-interface Sphere {
-  x: number
-  y: number
-  z: number
-  r: number
-  color: string
-  vx: number
-  vy: number
-  vz: number
+interface Orb {
+  x: number; y: number; z: number
+  r: number; color: string
+  vx: number; vy: number
 }
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const rotRef = useRef(0)
-  const rafRef = useRef<number>(0)
+  const rotRef    = useRef(0)
+  const rafRef    = useRef<number>(0)
+  const dragRef   = useRef({ active: false, lastX: 0, velocity: 0 })
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -28,113 +24,118 @@ export default function Hero() {
     // ── sizing ──────────────────────────────────────────────
     const setSize = () => {
       const rect = canvas.parentElement!.getBoundingClientRect()
-      canvas.width = rect.width
+      canvas.width  = rect.width
       canvas.height = rect.height
     }
     setSize()
     const ro = new ResizeObserver(setSize)
     ro.observe(canvas.parentElement!)
 
-    // ── floating orbital spheres ────────────────────────────
-    const orbs: Sphere[] = [
-      { x: -260, y: -200, z: 0, r: 18, color: '#dc2626', vx: 0.12, vy: 0.07, vz: 0 },
-      { x: -310, y:  60,  z: 0, r: 14, color: '#3b82f6', vx: -0.09, vy: 0.12, vz: 0 },
-      { x:  280, y: -130, z: 0, r: 10, color: '#dc2626', vx: 0.14, vy: -0.09, vz: 0 },
-      { x:  260, y:  220, z: 0, r: 16, color: '#3b82f6', vx: -0.11, vy: -0.08, vz: 0 },
-      { x:   60, y:  280, z: 0, r: 11, color: '#3b82f6', vx: 0.08, vy: 0.14, vz: 0 },
-      { x:  320, y:   90, z: 0, r:  8, color: '#dc2626', vx: -0.13, vy: 0.06, vz: 0 },
+    // ── floating orbs ───────────────────────────────────────
+    const orbs: Orb[] = [
+      { x: -200, y: -160, z: 0, r: 14, color: '#dc2626', vx:  0.11, vy:  0.06 },
+      { x: -240, y:   50, z: 0, r: 10, color: '#3b82f6', vx: -0.08, vy:  0.10 },
+      { x:  220, y: -110, z: 0, r:  8, color: '#dc2626', vx:  0.12, vy: -0.08 },
+      { x:  200, y:  180, z: 0, r: 12, color: '#3b82f6', vx: -0.09, vy: -0.07 },
+      { x:   50, y:  220, z: 0, r:  9, color: '#3b82f6', vx:  0.07, vy:  0.11 },
+      { x:  240, y:   70, z: 0, r:  7, color: '#dc2626', vx: -0.10, vy:  0.05 },
     ]
 
-    // ── draw ────────────────────────────────────────────────
-    const LATS  = 12   // latitude rings
-    const LNGS  = 18   // longitude meridians
-    const R     = Math.min(canvas.height * 0.40, 260)
+    // ── constants ───────────────────────────────────────────
+    const LATS  = 12
+    const LNGS  = 18
 
     function project(x: number, y: number, z: number, cx: number, cy: number): [number, number, number] {
-      // simple perspective
-      const fov = 900
+      const fov   = 900
       const scale = fov / (fov + z)
       return [cx + x * scale, cy + y * scale, scale]
     }
 
-    function sphereColor(x: number, _y: number, _z: number): { line: string; dot: string } {
-      // normalised -1 … +1 in rotated space
-      const t = Math.max(-1, Math.min(1, x / R))
-      if (t > 0) {
-        const a = 0.35 + t * 0.65
+    // Red only for top-left ~third of the globe: wx < 0 AND wy < -R*0.2
+    // Everything else is blue
+    function sphereColor(wx: number, wy: number, R: number): { line: string; dot: string } {
+      const nx = wx / R   // -1 … 1
+      const ny = wy / R   // -1 … 1
+      const isRed = nx < -0.05 && ny < -0.15
+      const depth = 0.35 + Math.abs(nx) * 0.65
+
+      if (isRed) {
         return {
-          line: `rgba(220,38,38,${(a * 0.55).toFixed(2)})`,
-          dot:  `rgba(220,38,38,${(a * 0.90).toFixed(2)})`,
+          line: `rgba(220,38,38,${(depth * 0.55).toFixed(2)})`,
+          dot:  `rgba(220,38,38,${(depth * 0.90).toFixed(2)})`,
         }
-      } else {
-        const a = 0.35 + (-t) * 0.65
-        return {
-          line: `rgba(59,130,246,${(a * 0.55).toFixed(2)})`,
-          dot:  `rgba(59,130,246,${(a * 0.90).toFixed(2)})`,
-        }
+      }
+      return {
+        line: `rgba(59,130,246,${(depth * 0.55).toFixed(2)})`,
+        dot:  `rgba(59,130,246,${(depth * 0.90).toFixed(2)})`,
       }
     }
 
     function drawGlobe(rot: number) {
-      const cx = canvas.width  * 0.62
-      const cy = canvas.height * 0.50
+      const W = canvas.width
+      const H = canvas.height
+      // Globe sits right-of-center, slightly above mid
+      const cx = W * 0.63
+      const cy = H * 0.50
+      const R  = Math.min(H * 0.28, 190)
 
-      // ── latitude rings ──
+      // ── latitude rings ──────────────────────────────────
       for (let i = 1; i < LATS; i++) {
-        const phi = (i / LATS) * Math.PI   // 0 … π
+        const phi = (i / LATS) * Math.PI
         const ry  = R * Math.cos(phi)
         const rr  = R * Math.sin(phi)
-
-        const pts: [number, number, number, number, number][] = []
         const STEPS = 80
+
+        // Collect all points first for per-segment coloring
+        const pts: { px: number; py: number; wx: number; wy: number; wz: number }[] = []
         for (let s = 0; s <= STEPS; s++) {
           const theta = (s / STEPS) * Math.PI * 2 + rot
           const wx = rr * Math.sin(theta)
           const wz = rr * Math.cos(theta)
           const wy = ry
-          const { line } = sphereColor(wx, wy, wz)
-          pts.push([...project(wx, wy, wz, cx, cy), wx] as any)
+          const [px, py] = project(wx, wy, wz, cx, cy)
+          pts.push({ px, py, wx, wy, wz })
         }
 
-        ctx.beginPath()
-        for (let s = 0; s <= STEPS; s++) {
-          const [px, py, sc] = pts[s]
-          // only draw front-facing arcs (z > -R/2)
-          if (s === 0) ctx.moveTo(px, py)
-          else ctx.lineTo(px, py)
+        // Draw segment-by-segment so color transitions smoothly
+        for (let s = 0; s < STEPS; s++) {
+          const { line } = sphereColor(pts[s].wx, pts[s].wy, R)
+          ctx.beginPath()
+          ctx.moveTo(pts[s].px, pts[s].py)
+          ctx.lineTo(pts[s + 1].px, pts[s + 1].py)
+          ctx.strokeStyle = line
+          ctx.lineWidth = 0.8
+          ctx.stroke()
         }
-        // color based on starting wx
-        const { line } = sphereColor(pts[Math.floor(STEPS / 2)][3], 0, 0)
-        ctx.strokeStyle = line
-        ctx.lineWidth = 0.9
-        ctx.stroke()
       }
 
-      // ── meridians ──
+      // ── meridians ───────────────────────────────────────
       for (let j = 0; j < LNGS; j++) {
         const theta = (j / LNGS) * Math.PI * 2 + rot
-        const pts: [number, number, number, number][] = []
         const STEPS = 60
+
+        const pts: { px: number; py: number; wx: number; wy: number; wz: number }[] = []
         for (let s = 0; s <= STEPS; s++) {
           const phi = (s / STEPS) * Math.PI
           const wx  = R * Math.sin(phi) * Math.sin(theta)
           const wy  = R * Math.cos(phi)
           const wz  = R * Math.sin(phi) * Math.cos(theta)
-          pts.push([...project(wx, wy, wz, cx, cy), wx] as any)
+          const [px, py] = project(wx, wy, wz, cx, cy)
+          pts.push({ px, py, wx, wy, wz })
         }
-        ctx.beginPath()
-        for (let s = 0; s <= STEPS; s++) {
-          const [px, py] = pts[s]
-          if (s === 0) ctx.moveTo(px, py)
-          else ctx.lineTo(px, py)
+
+        for (let s = 0; s < STEPS; s++) {
+          const { line } = sphereColor(pts[s].wx, pts[s].wy, R)
+          ctx.beginPath()
+          ctx.moveTo(pts[s].px, pts[s].py)
+          ctx.lineTo(pts[s + 1].px, pts[s + 1].py)
+          ctx.strokeStyle = line
+          ctx.lineWidth = 0.8
+          ctx.stroke()
         }
-        const { line } = sphereColor(pts[30][3], 0, 0)
-        ctx.strokeStyle = line
-        ctx.lineWidth = 0.9
-        ctx.stroke()
       }
 
-      // ── intersection dots ──
+      // ── intersection dots ────────────────────────────────
       for (let i = 1; i < LATS; i++) {
         const phi = (i / LATS) * Math.PI
         const ry  = R * Math.cos(phi)
@@ -144,43 +145,42 @@ export default function Hero() {
           const wx = rr * Math.sin(theta)
           const wz = rr * Math.cos(theta)
           const wy = ry
-          // cull back-face dots
-          if (wz < -R * 0.15) continue
+          // Cull back-face
+          if (wz < -R * 0.1) continue
           const [px, py, sc] = project(wx, wy, wz, cx, cy)
-          const { dot } = sphereColor(wx, wy, wz)
-          const dr = 2.2 * sc + (wz / R) * 1.0
+          const { dot } = sphereColor(wx, wy, R)
+          const dr = Math.max(0.8, 2.0 * sc + (wz / R) * 0.8)
           ctx.beginPath()
-          ctx.arc(px, py, Math.max(0.8, dr), 0, Math.PI * 2)
+          ctx.arc(px, py, dr, 0, Math.PI * 2)
           ctx.fillStyle = dot
           ctx.fill()
         }
       }
     }
 
-    function drawOrbs(rot: number) {
-      const cx = canvas.width  * 0.62
-      const cy = canvas.height * 0.50
+    function drawOrbs() {
+      const W = canvas.width
+      const H = canvas.height
+      const cx = W * 0.63
+      const cy = H * 0.50
+
       for (const orb of orbs) {
-        // slow drift
         orb.x += orb.vx
         orb.y += orb.vy
-        const maxX = canvas.width  * 0.50
-        const maxY = canvas.height * 0.50
-        if (Math.abs(orb.x) > maxX) orb.vx *= -1
-        if (Math.abs(orb.y) > maxY) orb.vy *= -1
+        if (Math.abs(orb.x) > W * 0.48) orb.vx *= -1
+        if (Math.abs(orb.y) > H * 0.48) orb.vy *= -1
 
         const [px, py] = project(orb.x, orb.y, orb.z, cx, cy)
-        // glow
-        const grd = ctx.createRadialGradient(px, py, 0, px, py, orb.r * 3.5)
         const base = orb.color === '#dc2626' ? '220,38,38' : '59,130,246'
-        grd.addColorStop(0,   `rgba(${base},0.55)`)
-        grd.addColorStop(0.4, `rgba(${base},0.22)`)
+        const grd  = ctx.createRadialGradient(px, py, 0, px, py, orb.r * 3.2)
+        grd.addColorStop(0,   `rgba(${base},0.50)`)
+        grd.addColorStop(0.4, `rgba(${base},0.18)`)
         grd.addColorStop(1,   `rgba(${base},0)`)
         ctx.beginPath()
-        ctx.arc(px, py, orb.r * 3.5, 0, Math.PI * 2)
+        ctx.arc(px, py, orb.r * 3.2, 0, Math.PI * 2)
         ctx.fillStyle = grd
         ctx.fill()
-        // solid core
+
         ctx.beginPath()
         ctx.arc(px, py, orb.r, 0, Math.PI * 2)
         ctx.fillStyle = orb.color
@@ -190,23 +190,60 @@ export default function Hero() {
 
     function tick() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      rotRef.current += 0.004   // steady rotation speed
-      drawOrbs(rotRef.current)
+
+      // Auto-spin when not dragging; coast with velocity after drag release
+      if (!dragRef.current.active) {
+        if (Math.abs(dragRef.current.velocity) > 0.0002) {
+          dragRef.current.velocity *= 0.96   // friction
+          rotRef.current += dragRef.current.velocity
+        } else {
+          dragRef.current.velocity = 0
+          rotRef.current += 0.004            // steady auto-spin
+        }
+      }
+
+      drawOrbs()
       drawGlobe(rotRef.current)
       rafRef.current = requestAnimationFrame(tick)
     }
+
+    // ── mouse drag handlers ─────────────────────────────────
+    const onMouseDown = (e: MouseEvent) => {
+      dragRef.current.active = true
+      dragRef.current.lastX  = e.clientX
+      dragRef.current.velocity = 0
+      canvas.style.cursor = 'grabbing'
+    }
+    const onMouseMove = (e: MouseEvent) => {
+      if (!dragRef.current.active) return
+      const dx = e.clientX - dragRef.current.lastX
+      dragRef.current.velocity = dx * 0.003
+      rotRef.current += dragRef.current.velocity
+      dragRef.current.lastX = e.clientX
+    }
+    const onMouseUp = () => {
+      dragRef.current.active = false
+      canvas.style.cursor = 'grab'
+    }
+
+    canvas.style.cursor = 'grab'
+    canvas.addEventListener('mousedown', onMouseDown)
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup',   onMouseUp)
 
     rafRef.current = requestAnimationFrame(tick)
 
     return () => {
       cancelAnimationFrame(rafRef.current)
       ro.disconnect()
+      canvas.removeEventListener('mousedown', onMouseDown)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup',   onMouseUp)
     }
   }, [])
 
   return (
     <section className="relative min-h-screen overflow-hidden gradient-hero pt-20">
-      {/* Canvas fills the whole section */}
       <div className="absolute inset-0 z-0" aria-hidden="true">
         <canvas ref={canvasRef} className="w-full h-full" />
       </div>
@@ -214,9 +251,9 @@ export default function Hero() {
       {/* Gradient fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-[var(--background)] pointer-events-none z-10" />
 
-      {/* Text content — left column */}
-      <div className="relative z-10 min-h-screen flex items-center px-8 md:px-16 lg:px-24">
-        <div className="max-w-sm lg:max-w-md fade-in-up">
+      {/* Text — left column */}
+      <div className="relative z-10 min-h-screen flex items-center px-8 md:px-16 lg:px-24 pointer-events-none">
+        <div className="max-w-sm lg:max-w-md fade-in-up pointer-events-auto">
           <p className="text-xs font-semibold tracking-widest uppercase text-[var(--text-muted)] mb-6">
             Trusted in 30+ countries
           </p>
@@ -245,13 +282,11 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="mt-16 flex flex-col gap-1.5">
+          <div className="mt-16">
             <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
-              <span className="scroll-indicator inline-block">
-                <svg className="w-4 h-4 text-[var(--brand-blue)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-              </span>
+              <svg className="w-4 h-4 text-[var(--brand-blue)] scroll-indicator" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
               Scroll to explore
             </div>
           </div>
