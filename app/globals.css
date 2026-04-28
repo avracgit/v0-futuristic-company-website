@@ -89,8 +89,8 @@
 .section-base {
   position: relative;
   overflow: hidden;
-  padding-top: 7rem;
-  padding-bottom: 7rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
@@ -102,7 +102,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 8rem;
+  height: 5rem;
   background: linear-gradient(to bottom, transparent, var(--background));
   pointer-events: none;
   z-index: 2;

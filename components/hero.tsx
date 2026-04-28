@@ -3,12 +3,6 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 
-interface Orb {
-  x: number; y: number; z: number
-  r: number; color: string
-  vx: number; vy: number
-}
-
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const rotRef    = useRef(0)
@@ -30,28 +24,18 @@ export default function Hero() {
     const ro = new ResizeObserver(setSize)
     ro.observe(canvas.parentElement!)
 
-    // ── floating orbs ──────────────────────────────────
-    const orbs: Orb[] = [
-      { x: -200, y: -160, z: 0, r: 14, color: '#f40000', vx:  0.11, vy:  0.06 },
-      { x: -240, y:   50, z: 0, r: 10, color: '#009de7', vx: -0.08, vy:  0.10 },
-      { x:  220, y: -110, z: 0, r:  8, color: '#f40000', vx:  0.12, vy: -0.08 },
-      { x:  200, y:  180, z: 0, r: 12, color: '#009de7', vx: -0.09, vy: -0.07 },
-      { x:   50, y:  220, z: 0, r:  9, color: '#009de7', vx:  0.07, vy:  0.11 },
-      { x:  240, y:   70, z: 0, r:  7, color: '#f40000', vx: -0.10, vy:  0.05 },
-    ]
-
     const LATS  = 10
     const LNGS  = 16
-    // 25-degree tilt: rotate around X-axis (tilts top toward/away from viewer)
+    // 25-degree tilt around Y-axis (tilts globe left/right)
     const TILT  = (25 * Math.PI) / 180
     const sinT = Math.sin(TILT)
     const cosT = Math.cos(TILT)
 
-    // Apply X-axis tilt (horizontal axis tilt)
+    // Apply Y-axis tilt (rotates around vertical axis)
     function applyTilt(wx: number, wy: number, wz: number): [number, number, number] {
-      const ty = wy * cosT - wz * sinT
-      const tz = wy * sinT + wz * cosT
-      return [wx, ty, tz]
+      const tx = wx * cosT + wz * sinT
+      const tz = -wx * sinT + wz * cosT
+      return [tx, wy, tz]
     }
 
     function project(x: number, y: number, z: number, cx: number, cy: number): [number, number, number] {
@@ -76,11 +60,16 @@ export default function Hero() {
     function drawGlobe(rot: number) {
       const W = canvas.width
       const H = canvas.height
-      // Move globe further right (0.72 instead of 0.63)
       const cx = W * 0.72
       const cy = H * 0.50
-      // Smaller globe
       const R  = Math.min(H * 0.32, 170)
+
+      // ── Always-visible outer ring ──────────────────────
+      ctx.beginPath()
+      ctx.arc(cx, cy, R, 0, Math.PI * 2)
+      ctx.strokeStyle = 'rgba(0, 157, 231, 0.35)'
+      ctx.lineWidth = 2
+      ctx.stroke()
 
       // ── latitude rings ─────────────────────────────────
       for (let i = 1; i < LATS; i++) {
@@ -107,7 +96,7 @@ export default function Hero() {
           ctx.moveTo(pts[s].px, pts[s].py)
           ctx.lineTo(pts[s + 1].px, pts[s + 1].py)
           ctx.strokeStyle = color
-          ctx.lineWidth = 1.5  // Thicker lines
+          ctx.lineWidth = 1.5
           ctx.stroke()
         }
       }
@@ -135,40 +124,9 @@ export default function Hero() {
           ctx.moveTo(pts[s].px, pts[s].py)
           ctx.lineTo(pts[s + 1].px, pts[s + 1].py)
           ctx.strokeStyle = color
-          ctx.lineWidth = 1.5  // Thicker lines
+          ctx.lineWidth = 1.5
           ctx.stroke()
         }
-      }
-    }
-
-    function drawOrbs() {
-      const W = canvas.width
-      const H = canvas.height
-      const cx = W * 0.72
-      const cy = H * 0.50
-
-      for (const orb of orbs) {
-        orb.x += orb.vx
-        orb.y += orb.vy
-        if (Math.abs(orb.x) > W * 0.48) orb.vx *= -1
-        if (Math.abs(orb.y) > H * 0.48) orb.vy *= -1
-
-        const [px, py] = project(orb.x, orb.y, orb.z, cx, cy)
-        const isRed = orb.color === '#f40000'
-        const base = isRed ? '244,0,0' : '0,157,231'
-        const grd  = ctx.createRadialGradient(px, py, 0, px, py, orb.r * 3.2)
-        grd.addColorStop(0,   `rgba(${base},0.50)`)
-        grd.addColorStop(0.4, `rgba(${base},0.18)`)
-        grd.addColorStop(1,   `rgba(${base},0)`)
-        ctx.beginPath()
-        ctx.arc(px, py, orb.r * 3.2, 0, Math.PI * 2)
-        ctx.fillStyle = grd
-        ctx.fill()
-
-        ctx.beginPath()
-        ctx.arc(px, py, orb.r, 0, Math.PI * 2)
-        ctx.fillStyle = orb.color
-        ctx.fill()
       }
     }
 
@@ -185,7 +143,6 @@ export default function Hero() {
         }
       }
 
-      drawOrbs()
       drawGlobe(rotRef.current)
       rafRef.current = requestAnimationFrame(tick)
     }
