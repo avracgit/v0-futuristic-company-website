@@ -83,13 +83,13 @@ export default function Hero() {
     }
 
     function drawOrb(ox: number, oy: number, r: number, col: string) {
-      // Outer glow halo
-      const g = ctx.createRadialGradient(ox, oy, 0, ox, oy, r * 3.2)
-      g.addColorStop(0,   col + 'bb')
-      g.addColorStop(0.35, col + '55')
+      // Outer glow halo — subtler
+      const g = ctx.createRadialGradient(ox, oy, 0, ox, oy, r * 2.0)
+      g.addColorStop(0,   col + '66')
+      g.addColorStop(0.5, col + '22')
       g.addColorStop(1,   col + '00')
       ctx.beginPath()
-      ctx.arc(ox, oy, r * 3.2, 0, Math.PI * 2)
+      ctx.arc(ox, oy, r * 2.0, 0, Math.PI * 2)
       ctx.fillStyle = g
       ctx.fill()
       // Solid core
@@ -111,10 +111,10 @@ export default function Hero() {
       const W   = canvas.width  / window.devicePixelRatio
       const H   = canvas.height / window.devicePixelRatio
       // Globe center: right-of-center horizontally, vertically centered
-      const cx  = W * 0.62
+      const cx  = W * 0.65
       const cy  = H * 0.50
-      // Large globe — fills ~55% of viewport height, capped
-      const R   = Math.min(H * 0.44, 300)
+      // Smaller globe — fills ~28% of viewport height
+      const R   = Math.min(H * 0.28, 190)
       const rot = rotRef.current
 
       ctx.clearRect(0, 0, W, H)
@@ -127,20 +127,18 @@ export default function Hero() {
       })
 
       // ── Outer glow ring (always visible) ──────────────────
-      // Soft wide aura
-      const ringGlow = ctx.createRadialGradient(cx, cy, R - 4, cx, cy, R + 28)
-      ringGlow.addColorStop(0,   'rgba(0,157,231,0.22)')
-      ringGlow.addColorStop(0.5, 'rgba(0,157,231,0.08)')
+      const ringGlow = ctx.createRadialGradient(cx, cy, R - 2, cx, cy, R + 16)
+      ringGlow.addColorStop(0,   'rgba(0,157,231,0.10)')
       ringGlow.addColorStop(1,   'rgba(0,157,231,0.00)')
       ctx.beginPath()
-      ctx.arc(cx, cy, R + 28, 0, Math.PI * 2)
+      ctx.arc(cx, cy, R + 16, 0, Math.PI * 2)
       ctx.fillStyle = ringGlow
       ctx.fill()
       // Crisp ring
       ctx.beginPath()
       ctx.arc(cx, cy, R, 0, Math.PI * 2)
-      ctx.strokeStyle = 'rgba(0,157,231,0.40)'
-      ctx.lineWidth = 1.8
+      ctx.strokeStyle = 'rgba(0,157,231,0.30)'
+      ctx.lineWidth = 1.4
       ctx.stroke()
 
       // ── Build intersection list ───────────────────────────
@@ -215,16 +213,15 @@ export default function Hero() {
       for (const { px, py, tx, ty, tz } of dots) {
         const { glowR } = getColors(tx, ty, tz, R)
         const depth = Math.max(0.3, 0.3 + (tz / R + 1) * 0.4)
-        const dotR  = Math.max(1.5, 3.5 * depth)
+        const dotR  = Math.max(1.2, 2.5 * depth)
         const [r, g, b] = glowR
 
-        // Glow halo
-        const grd = ctx.createRadialGradient(px, py, 0, px, py, dotR * 4)
-        grd.addColorStop(0,   `rgba(${r},${g},${b},${(depth * 0.65).toFixed(2)})`)
-        grd.addColorStop(0.4, `rgba(${r},${g},${b},${(depth * 0.25).toFixed(2)})`)
+        // Subtle glow halo
+        const grd = ctx.createRadialGradient(px, py, 0, px, py, dotR * 2.5)
+        grd.addColorStop(0,   `rgba(${r},${g},${b},${(depth * 0.30).toFixed(2)})`)
         grd.addColorStop(1,   `rgba(${r},${g},${b},0)`)
         ctx.beginPath()
-        ctx.arc(px, py, dotR * 4, 0, Math.PI * 2)
+        ctx.arc(px, py, dotR * 2.5, 0, Math.PI * 2)
         ctx.fillStyle = grd
         ctx.fill()
 
@@ -287,14 +284,52 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative min-h-screen overflow-hidden pt-20" style={{ background: 'var(--background)' }}>
-      {/* Subtle radial glow behind globe */}
-      <div
-        className="absolute inset-0 pointer-events-none"
+      {/* Sunburst glow — rendered as an SVG so we can make proper rays */}
+      <svg
         aria-hidden="true"
-        style={{
-          background: 'radial-gradient(ellipse 60% 70% at 68% 50%, rgba(0,157,231,0.07) 0%, transparent 65%)',
-        }}
-      />
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        preserveAspectRatio="xMidYMid slice"
+        viewBox="0 0 1440 900"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          {/* Core radial bloom behind the globe */}
+          <radialGradient id="sb-core" cx="65%" cy="50%" r="38%">
+            <stop offset="0%"   stopColor="#009de7" stopOpacity="0.10" />
+            <stop offset="60%"  stopColor="#009de7" stopOpacity="0.03" />
+            <stop offset="100%" stopColor="#009de7" stopOpacity="0"    />
+          </radialGradient>
+          {/* Conic sunburst rays */}
+          <radialGradient id="sb-ray" cx="65%" cy="50%" r="55%">
+            <stop offset="0%"   stopColor="#1a5fa8" stopOpacity="0.13" />
+            <stop offset="100%" stopColor="#1a5fa8" stopOpacity="0"    />
+          </radialGradient>
+        </defs>
+
+        {/* 12 subtle rays fanning out from globe center */}
+        {Array.from({ length: 12 }).map((_, i) => {
+          const angleDeg = i * 30
+          const angleRad = (angleDeg * Math.PI) / 180
+          const cx = 1440 * 0.65
+          const cy = 900  * 0.50
+          const len = 720
+          const halfW = 18
+          const ex = cx + Math.cos(angleRad) * len
+          const ey = cy + Math.sin(angleRad) * len
+          const px = Math.cos(angleRad + Math.PI / 2) * halfW
+          const py = Math.sin(angleRad + Math.PI / 2) * halfW
+          return (
+            <polygon
+              key={i}
+              points={`${cx},${cy} ${ex + px},${ey + py} ${ex - px},${ey - py}`}
+              fill={`rgba(0,157,231,${i % 2 === 0 ? 0.028 : 0.016})`}
+            />
+          )
+        })}
+
+        {/* Soft bloom on top of rays */}
+        <ellipse cx="65%" cy="50%" rx="520" ry="380" fill="url(#sb-core)" />
+      </svg>
 
       {/* Canvas */}
       <div className="absolute inset-0 z-0" aria-hidden="true">
