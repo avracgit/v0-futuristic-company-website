@@ -9,6 +9,7 @@ import Testimonials from '@/components/testimonials'
 import Footer from '@/components/footer'
 import BackToTop from '@/components/back-to-top'
 import SectionNav from '@/components/section-nav'
+import Chatbot from '@/components/chatbot'
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
       <Testimonials />
       <Footer />
       <BackToTop />
+      <Chatbot />
     </main>
   )
 }
