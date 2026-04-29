@@ -41,17 +41,16 @@ export default function Hero() {
     const LATS  = 12
     const LNGS  = 18
 
-    // 27.5° X-axis tilt — applied to globe AND orbs so they move as one entity
-    const TILT_X = (27.5 * Math.PI) / 180
-    const cosTX  = Math.cos(TILT_X)
-    const sinTX  = Math.sin(TILT_X)
-
-    // Apply X-axis rotation: tilts the top of the sphere away from the viewer
-    function tiltX(x: number, y: number, z: number): [number, number, number] {
+    // 27.5° Y-axis tilt — leans the north pole to the right by 27.5°
+    // Applied identically to globe and orbs so they are one rigid entity
+    function tiltY(x: number, y: number, z: number): [number, number, number] {
+      const angle = (27.5 * Math.PI) / 180
+      const cos = Math.cos(angle)
+      const sin = Math.sin(angle)
       return [
-        x,
-        y * cosTX - z * sinTX,
-        y * sinTX + z * cosTX,
+        x * cos + z * sin,
+        y,
+        -x * sin + z * cos,
       ]
     }
 
@@ -100,7 +99,7 @@ export default function Hero() {
           const wx0 = rr * Math.sin(theta)
           const wz0 = rr * Math.cos(theta)
           const wy0 = ry
-          const [tx, ty, tz] = tiltX(wx0, wy0, wz0)
+          const [tx, ty, tz] = tiltY(wx0, wy0, wz0)
           const [px, py] = project(tx, ty, tz, cx, cy)
           pts.push({ px, py, wx: wx0, wy: wy0, tz })
         }
@@ -128,7 +127,7 @@ export default function Hero() {
           const wx0 = R * Math.sin(phi) * Math.sin(theta)
           const wy0 = R * Math.cos(phi)
           const wz0 = R * Math.sin(phi) * Math.cos(theta)
-          const [tx, ty, tz] = tiltX(wx0, wy0, wz0)
+          const [tx, ty, tz] = tiltY(wx0, wy0, wz0)
           const [px, py] = project(tx, ty, tz, cx, cy)
           pts.push({ px, py, wx: wx0, wy: wy0, tz })
         }
@@ -155,7 +154,7 @@ export default function Hero() {
           const wx0 = rr * Math.sin(theta)
           const wz0 = rr * Math.cos(theta)
           const wy0 = ry
-          const [tx, ty, tz] = tiltX(wx0, wy0, wz0)
+          const [tx, ty, tz] = tiltY(wx0, wy0, wz0)
           if (tz < -R * 0.1) continue
           const [px, py, sc] = project(tx, ty, tz, cx, cy)
           const { dot } = sphereColor(wx0, wy0, R)
@@ -187,8 +186,8 @@ export default function Hero() {
         const wy0 = -dist * Math.cos(phi)
         const wz0 =  dist * Math.sin(phi)
 
-        // Apply same X-axis tilt so orbs move with the globe
-        const [tx, ty, tz] = tiltX(-dist * Math.sin(phi), wy0, 0)
+        // Apply same Y-axis tilt so orbs move with the globe
+        const [tx, ty, tz] = tiltY(-dist * Math.sin(phi), wy0, 0)
         void tz
 
         const px = cx + tx
@@ -281,7 +280,7 @@ export default function Hero() {
       <div className="relative z-10 min-h-screen flex items-center px-8 md:px-16 lg:px-20 pointer-events-none">
         <div className="max-w-lg lg:max-w-xl fade-in-up pointer-events-auto">
           <p className="text-xs font-semibold tracking-widest uppercase text-[var(--text-muted)] mb-8">
-            Trusted in 30+ countries
+            Trusted across 5 countries
           </p>
 
           <h1 className="font-semibold text-5xl md:text-6xl lg:text-7xl leading-[1.2] tracking-tight text-balance mb-8">
@@ -308,14 +307,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="mt-20">
-            <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
-              <svg className="w-4 h-4 text-[var(--brand-blue)] scroll-indicator" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-              Scroll to explore
-            </div>
-          </div>
+
         </div>
       </div>
     </section>

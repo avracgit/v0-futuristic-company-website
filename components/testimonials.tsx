@@ -77,14 +77,14 @@ export default function Testimonials() {
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-blue text-xs font-medium mb-6">
+        <div className="mb-8 md:mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-blue text-xs font-medium mb-4 md:mb-6">
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
             Testimonials
           </div>
-          <h2 className="font-semibold text-3xl md:text-4xl lg:text-5xl text-foreground text-balance">
+          <h2 className="font-semibold text-2xl md:text-4xl lg:text-5xl text-foreground text-balance">
             Here You Can Find <span className="text-[var(--brand-blue)]">Our Reviews</span>
           </h2>
         </div>
@@ -99,7 +99,7 @@ export default function Testimonials() {
             {allCards.map((r, i) => (
               <article
                 key={i}
-                className="glass-card rounded-2xl p-6 w-80 flex-shrink-0"
+                className="glass-card rounded-2xl p-4 md:p-6 w-64 sm:w-80 flex-shrink-0"
                 aria-label={`Review by ${r.name}`}
               >
                 {/* Author row */}
