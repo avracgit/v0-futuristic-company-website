@@ -186,16 +186,19 @@ html.dark {
 .glass-card {
   background: #f1f5f9;
   border: 1px solid rgba(59, 130, 246, 0.14);
+  border-bottom: 2.5px solid var(--brand-red);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.04);
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 html.dark .glass-card {
   background: #111830;
   border-color: rgba(59, 130, 246, 0.13);
+  border-bottom-color: var(--brand-red);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30), 0 4px 20px rgba(0, 0, 0, 0.20);
 }
 .glass-card:hover {
   border-color: rgba(59, 130, 246, 0.32);
+  border-bottom-color: var(--brand-red);
   box-shadow: 0 4px 24px rgba(59, 130, 246, 0.09);
 }
 
@@ -248,7 +251,7 @@ html.dark .glass-bar {
 }
 .scroll-indicator { animation: scrollBounce 2s ease-in-out infinite; }
 
-/* ─── Animated connection lines ──────────────────────────── */
+/* ─���─ Animated connection lines ──────────────────────────── */
 @keyframes dashMove {
   to { stroke-dashoffset: -20; }
 }

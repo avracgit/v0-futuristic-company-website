@@ -67,8 +67,8 @@ export default function Clients() {
 function ClientCard({ client }: { client: typeof clients[0] }) {
   return (
     <div
-      className="flex items-center gap-3 px-5 py-3 rounded-xl glass-card flex-shrink-0 group cursor-default"
-      style={{ minWidth: 160 }}
+      className="flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-2.5 sm:py-3 rounded-xl glass-card flex-shrink-0 group cursor-default"
+      style={{ minWidth: 130 }}
     >
       {/* Color dot / monogram */}
       <div

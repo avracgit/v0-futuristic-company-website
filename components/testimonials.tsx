@@ -99,7 +99,7 @@ export default function Testimonials() {
             {allCards.map((r, i) => (
               <article
                 key={i}
-                className="glass-card rounded-2xl p-4 md:p-6 w-72 sm:w-80 flex-shrink-0"
+                className="glass-card rounded-2xl p-4 md:p-6 w-64 sm:w-80 flex-shrink-0"
                 aria-label={`Review by ${r.name}`}
               >
                 {/* Author row */}

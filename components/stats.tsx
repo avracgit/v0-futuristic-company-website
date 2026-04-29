@@ -70,7 +70,7 @@ export default function Stats() {
           {stats.map((stat, i) => (
             <div key={i} className="glass-card rounded-2xl p-4 md:p-6 text-center group">
               <div
-                className="font-sans font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2 transition-all duration-300"
+                className="font-sans font-bold text-2xl sm:text-3xl md:text-5xl lg:text-6xl mb-2 transition-all duration-300"
                 style={{ color: stat.color }}
               >
                 <CountUp target={stat.value} suffix={stat.suffix} />

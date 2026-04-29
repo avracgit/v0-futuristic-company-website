@@ -153,23 +153,23 @@ export default function Features() {
             <div className="p-5">
               <h4 className="text-sm font-semibold text-foreground mb-4">{active.preview.subtitle}</h4>
 
-              {/* Column headers */}
-              <div className="grid grid-cols-4 gap-2 text-[10px] text-[var(--text-muted)] font-medium uppercase tracking-wide pb-2 border-b border-white/6">
-                {active.preview.columns.map(c => <span key={c}>{c}</span>)}
+              {/* Column headers — hide last two cols on mobile */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] text-[var(--text-muted)] font-medium uppercase tracking-wide pb-2 border-b border-white/6">
+                {active.preview.columns.map((c, i) => (
+                  <span key={c} className={i >= 2 ? 'hidden sm:block' : ''}>{c}</span>
+                ))}
               </div>
 
               {/* Rows */}
               <div className="divide-y divide-white/5">
                 {active.preview.rows.map((row, i) => (
-                  <div key={i} className="grid grid-cols-4 gap-2 py-3 items-center">
-                    <div>
-                      <p className="text-xs font-medium text-foreground truncate">{row.name}</p>
-                    </div>
+                  <div key={i} className="grid grid-cols-2 sm:grid-cols-4 gap-2 py-2.5 items-center">
+                    <p className="text-xs font-medium text-foreground truncate">{row.name}</p>
                     <p className="text-xs text-[var(--text-muted)] truncate">{row.company}</p>
-                    <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-medium w-fit ${badgeClass[row.badge]}`}>
+                    <span className={`hidden sm:inline-flex px-2 py-0.5 rounded text-[10px] font-medium w-fit ${badgeClass[row.badge]}`}>
                       {row.status}
                     </span>
-                    <button className="text-[var(--brand-blue)] text-xs hover:underline text-left transition-opacity hover:opacity-80">
+                    <button className="hidden sm:block text-[var(--brand-blue)] text-xs hover:underline text-left transition-opacity hover:opacity-80">
                       View →
                     </button>
                   </div>
