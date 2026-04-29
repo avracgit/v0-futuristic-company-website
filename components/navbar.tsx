@@ -56,7 +56,6 @@ export default function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <ThemeToggle />
           <Link
             href="/contact"
             className={`px-5 py-2.5 rounded-lg bg-[var(--brand-blue)] text-white text-sm font-medium hover:shadow-[0_0_20px_var(--brand-blue-glow)] transition-all duration-300 flex items-center gap-2 ${
@@ -86,6 +85,11 @@ export default function Navbar() {
             className={`block w-6 h-0.5 bg-foreground transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
           />
         </button>
+      </div>
+
+      {/* Fixed theme toggle — top-right, always visible */}
+      <div className="fixed top-4 right-4 z-[60]">
+        <ThemeToggle />
       </div>
 
       {/* Mobile menu */}
