@@ -57,9 +57,6 @@ export default function Navbar() {
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
-          <a href="#chatbot" className="text-sm font-medium text-foreground hover:text-[var(--brand-blue)] transition-colors">
-            Chat
-          </a>
           <Link
             href="/contact"
             className={`px-5 py-2.5 rounded-lg bg-[var(--brand-blue)] text-white text-sm font-medium hover:shadow-[0_0_20px_var(--brand-blue-glow)] transition-all duration-300 flex items-center gap-2 ${
