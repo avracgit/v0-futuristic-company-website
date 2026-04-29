@@ -41,44 +41,69 @@ export default function SectionNav() {
   return (
     <nav
       aria-label="Page sections"
-      className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden md:flex items-center gap-1 transition-all duration-500 ${
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
+      className={`fixed left-4 lg:left-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center gap-2 transition-all duration-500 ${
+        visible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
       {sections.map((section, i) => {
         const isActive = i === activeIndex
+        const isVisited = i < activeIndex
         return (
-          <button
-            key={section.id}
-            onClick={() => scrollTo(section.id)}
-            aria-label={`Go to ${section.label}`}
-            title={section.label}
-            className="group relative flex flex-col items-center gap-1 px-1"
-          >
-            {/* Tick mark / progress bar */}
-            <span
-              className="block rounded-full transition-all duration-300"
+          <div key={section.id} className="relative flex items-center gap-2 group">
+            {/* Vertical connecting line */}
+            {i < sections.length - 1 && (
+              <div
+                className="absolute left-1.5 top-4 w-0.5 transition-colors duration-300"
+                style={{
+                  height: 16,
+                  background: isVisited
+                    ? 'rgba(59,130,246,0.30)'
+                    : 'rgba(100,116,139,0.15)',
+                }}
+              />
+            )}
+            
+            {/* Dot indicator */}
+            <button
+              onClick={() => scrollTo(section.id)}
+              aria-label={`Go to ${section.label}`}
+              title={section.label}
+              className="relative z-10 flex items-center justify-center transition-all duration-300"
               style={{
-                width:  isActive ? 24 : 12,
-                height: 2,
-                background: isActive
-                  ? 'var(--brand-blue)'
-                  : i < activeIndex
-                  ? 'rgba(59,130,246,0.40)'
-                  : 'rgba(100,116,139,0.25)',
+                width: isActive ? 12 : 8,
+                height: isActive ? 12 : 8,
               }}
-            />
-            {/* Label — only visible when active */}
+            >
+              {/* Outer ring for active state */}
+              {isActive && (
+                <div className="absolute inset-0 rounded-full bg-[var(--brand-blue)] animate-pulse opacity-20" />
+              )}
+              {/* Inner dot */}
+              <div
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  background: isActive
+                    ? 'var(--brand-blue)'
+                    : isVisited
+                    ? 'rgba(59,130,246,0.50)'
+                    : 'rgba(100,116,139,0.30)',
+                }}
+              />
+            </button>
+
+            {/* Label — appears on hover or when active */}
             <span
-              className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-medium tracking-wide pointer-events-none transition-all duration-200"
+              className="absolute left-full ml-3 whitespace-nowrap text-xs font-medium transition-all duration-200 pointer-events-none"
               style={{
                 opacity: isActive ? 1 : 0,
-                color: 'var(--brand-blue)',
+                color: isActive ? 'var(--brand-blue)' : 'var(--text-muted)',
               }}
             >
               {section.label}
             </span>
-          </button>
+          </div>
         )
       })}
     </nav>
